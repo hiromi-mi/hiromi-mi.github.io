@@ -1,0 +1,36 @@
+<!doctype html>
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <title>ARC083D - Restoring Road Network</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!--<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+   <script src="main.js"></script>-->
+</head>
+<body>
+   <h1>ARC083D - Restoring Road Network</h1>
+   <h2>問題</h2>
+   <p>
+      AtCoderを参照. <a href="https://atcoder.jp/contests/arc083/tasks/arc083_b">https://atcoder.jp/contests/arc083/tasks/arc083_b</a>
+   </p>
+   <h2>考え方</h2>
+   <p>
+      まず実際に全部の頂点に記録通りに経路を引いたとして、最短の経路距離を求める. N は300以下なので Warshall-Floyd法を素直に実装すれば問題ない.
+   </p>
+   <p>
+      記録上の最短経路と、その辺を取り除いたときに実際に実現できる最短経路が同一か長い時に実現可能. ここで長い場合で実現可能なのは、特定のもののみ経路の重みを長くすることで、他の経路に影響せずに実現できるから.
+   </p>
+   <p>
+      そして、実際の最短経路を実現するような辺は別になくてもよい. その辺を取り除いても問題ない場合はそれでよい. それはワーシャルフロイドのアルゴリズムに該当するかを考慮することで可能.
+   </p>
+   <h2>参考</h2>
+   <p>
+      この記事を書くにあたり、以下のコードを参考にしました. <a href="https://atcoder.jp/contests/arc083/submissions/4190487">https://atcoder.jp/contests/arc083/submissions/4190487</a>
+   </p>
+   <p>
+   <a href="../index.html">トップに戻る</a>
+   </p>
+</body>
+</html>
