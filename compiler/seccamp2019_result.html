@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@_hiromi_mi">
+<meta name="twitter:title" content="セキュリティキャンプ 2019 Y-II Cコンパイラを自作してみようゼミ 成果報告 (公開版)">
+<meta name="twitter:description" content="セキュリティキャンプ2019 で Cサブセットコンパイラを実装し、クラス機構の一部やT add(T, T) およびデバッガによるステップ実行などを実装し、最終日に成果報告を行ないました。そのスライドを書き下し一部加筆したものです。">
+<title>セキュリティキャンプ 2019 Y-II Cコンパイラを自作してみようゼミ 成果報告 (公開版)</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>セキュリティキャンプ 2019 Y-II Cコンパイラを自作してみようゼミ 成果報告 (公開版)</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Author: <a href="https://hiromi-mi.github.io/">hiromi_mi</a></p></div>
+<div class="paragraph"><p>セキュリティキャンプ2019 Y-II Cコンパイラを自作してみようゼミに参加し、Cサブセットコンパイラ <a href="https://github.com/hiromi-mi/hanando-fukui">github:hiromi-mi/hanando-fukui</a> を書いています。
+従って、最終日に成果報告として報告したスライドを書き出し、些細な訂正を加えたものを掲載します。何かしらの参考になればと思います。</p></div>
+<div class="paragraph"><p>応募用紙のほうは <a href="../SecurityCamp2019.html">hiromi_mi によるセキュリティキャンプ2019 Yトラック Y-II Cコンパイラ自作ゼミの応募用紙</a> に別途掲載してあります。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_y_ii_cコンパイラを自作してみようゼミ_概要">Y-II Cコンパイラを自作してみようゼミ 概要</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cソースコードからアセンブリコードを出力するコンパイラを資料
+<a href="https://www.sigbus.info/compilerbook">低レイヤを知りたい人のためのCコンパイラ作成入門</a> に従って書いていく。
+この資料では
+インクリメンタルに開発するのが特徴。基本的に開発途上であっても何かしらのC のサブセットをコンパイルできる状態が維持される。</p></div>
+<div class="paragraph"><p>規格や ABI の必要な部分を参照しつつ、 事前学習とセキュリティキャンプのうち2,3,4 日の3日間でひたすら開発を進める。</p></div>
+<div class="paragraph"><p>また、分からない箇所や取れないバグを講師に質問しつつ行なうことで、開発を素早く進めることができた。</p></div>
+<div class="paragraph"><p>(2018年度の記事ではあるが) 講師の一人である <a href="https://github.com/rui314">@rui314</a> さんによる
+<a href="https://note.mu/ruiu/n/n00ebc977fd60">Cコンパイラ制作の夏期集中コースが思っていた以上にうまくいった話</a> および他の参加者の様子を調べるとよいかもしれない。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_おやくそく">おやくそく</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>まず、既存の Borland C Compiler, gcc, clang などへの敬意を込め以下 「Cサブセットコンパイラ」と表記します。</p></div>
+<div class="paragraph"><p>Cサブセットコンパイラ自作の流行とともに怖がられていたり、不愉快に思われているのに悲しい気持ちを持っています。ここは成果報告の場なのできちんと報告は行ないますし、インターネット上にも公開します。</p></div>
+<div class="paragraph"><p>しかし進捗の状況で他人を煽る意図は決してありませんし、筆者の振る舞いや公開情報で他人を不愉快にさせるのは何としても回避したく思います。</p></div>
+<div class="paragraph"><p>当日は他の参加者の進捗を数枚のスライドをもとに概観しました。同士の成果量を比べるのは避けてほしい気持ちです。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_未実装">未実装</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>以下、一般的なコンパイラには備わっているが、筆者が実装しなかった内容を列挙する。"手抜き" あるいは "取捨選択"とも呼べるかもしれない。</p></div>
+<div class="paragraph"><p>(筆者の成果報告が過度に誇張されたり誤解されるのを防ぎ、読者を不愉快にさせるのを可能な限り避ける意図があります。)</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ほとんどの型検査
+</p>
+</li>
+<li>
+<p>
+private, public チェック (間に合わず)
+</p>
+</li>
+<li>
+<p>
+double 型や unsigned などの修飾子
+</p>
+</li>
+<li>
+<p>
+goto 文
+</p>
+</li>
+<li>
+<p>
+仮想関数テーブルやクラスの継承, new, delete
+</p>
+</li>
+<li>
+<p>
+for(;;)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_事前学習">事前学習</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_セルフホスト_3月下旬_5月1日">セルフホスト (3月下旬→5月1日)</h3>
+<div class="paragraph"><p>セルフホストとは自分で自分自身を幾度もコンパイルできる状態であり、</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+gcc
+</p>
+</li>
+<li>
+<p>
+→ hanando (./hanando)
+</p>
+</li>
+<li>
+<p>
+→ hanando (./main)
+</p>
+</li>
+<li>
+<p>
+→ hanando (./main2)
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>このような順序で <code>main.c</code> のコンパイルを試みたとき、これらが全て同一出力を出力する。</p></div>
+<div class="paragraph"><p>追記: なお、セルフホスト成立後の v.1.1.1 の時点でのソースコード行数を <a href="http://github.com/AlDanial/cloc">cloc</a> にて調査すると、おおむね2100行程度。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[~/devel/hanando-fukui]$ cloc main.c main.h
+       2 text files.
+       2 unique files.
+       0 files ignored.
+
+github.com/AlDanial/cloc v 1.82  T=0.04 s (48.8 files/s, 57830.9 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                1            139            110           1954
+C/C++ Header                     1             14             13            142
+-------------------------------------------------------------------------------
+SUM:                             2            153            123           2096
+-------------------------------------------------------------------------------</code></pre>
+</div></div>
+<div class="paragraph"><p>さて、セルフホストを検証する。 <code>make selfselftest</code> を実行すると自身を幾度も自分自身でコンパイルし、結果出力されるアセンブリを <code>diff -c</code> を用い比較する。差分がないことがわかる。</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #990000">[</span>hanando-fukui<span style="color: #990000">]</span>$ make selfselftest
+<span style="color: #990000">.</span>/hanando -r -f main<span style="color: #990000">.</span>c <span style="color: #990000">&gt;</span> main<span style="color: #990000">.</span>s
+gcc -g main<span style="color: #990000">.</span>s -o main
+<span style="color: #990000">.</span>/main -r -f main<span style="color: #990000">.</span>c <span style="color: #990000">&gt;</span> main2<span style="color: #990000">.</span>s
+gcc -g main2<span style="color: #990000">.</span>s -o main2
+<span style="color: #990000">.</span>/main<span style="color: #993399">2</span> -r -f main<span style="color: #990000">.</span>c <span style="color: #990000">&gt;</span> main3<span style="color: #990000">.</span>s
+gcc -g main3<span style="color: #990000">.</span>s -o main3
+diff -c main2<span style="color: #990000">.</span>s main3<span style="color: #990000">.</span>s
+diff -c main<span style="color: #990000">.</span>s main2<span style="color: #990000">.</span>s
+<span style="color: #990000">[</span>hanando-fukui<span style="color: #990000">]</span>$</tt></pre></div></div>
+</div>
+<div class="sect2">
+<h3 id="_レジスタマシンへの変更">レジスタマシンへの変更</h3>
+<div class="paragraph"><p>資料はスタックマシンベースで書かれているが、次の理由から
+レジスタマシンへ移行させた。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ゆくゆく最適化しやすいように
+</p>
+</li>
+<li>
+<p>
+レジスタはメモリ上にあるスタックと違い高速
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>一方、レジスタマシンの実装では一般にレジスタ割り付けなどを行なう必要がある。
+しかし、この際、凝ったことをせず
+必要になったらレジスタを <code>retain_reg()</code> にて確保、ノード評価終了後破棄するように実装した。</p></div>
+<div class="paragraph"><p>その結果、 <code>v2.0</code> 時点で、 <code>main.c</code> のコンパイル結果では (割り算などの特殊用途や関数引数を除き) 3レジスタ <code>r10</code> <code>r11</code> <code>r12</code> しか必要ないことがわかり、
+そのことに驚いた。</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_セキュリティキャンプ期間中">セキュリティキャンプ期間中</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>期間中に実装したものは次の通り。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+クラス機構のほんの一部
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+スタティックな Hoge::fuga()など
+</p>
+</li>
+<li>
+<p>
+インスタンス化されたメソッドの呼出
+</p>
+</li>
+<li>
+<p>
+問題点: this はない
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+最適化
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+定数畳み込み
+</p>
+</li>
+<li>
+<p>
+inline function expansion (デバッグ中)
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+関数ポインタ
+</p>
+</li>
+<li>
+<p>
+デバッガによるステップ実行
+</p>
+</li>
+<li>
+<p>
+組み込み型における静的ディスパッチ
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>このうちいくつかを取り上げて詳細を述べる。</p></div>
+<div class="sect2">
+<h3 id="_クラス機構の一部">クラス機構の一部</h3>
+<div class="paragraph"><p><code>class</code> 定義を実装し、その関連のスタティック関数の呼び出しやインスタンス関数を呼び出せるようにした。
+問題点として <code>this</code> キーワードが未導入であり、 <code>private</code> などのアクセス指定子が未実装などがある。</p></div>
+<div class="paragraph"><p>なお、次にあるソースコード例に <code>Vim</code> や <code>Emacs</code> とある。これは、名前マングリングが行なわれると関数のデバッグが行ないにくく、
+さてアセンブリコードを検索した際に見つけやすい名前にしようと考えた結果である。</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// $ ./hanando -r -f -cpp test.cpp &gt; test.s &amp;&amp; clang -g test.s -o test &amp;&amp; ./test</span></span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Test</span> <span style="color: #FF0000">{</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+   <span style="color: #009900">int</span> a<span style="color: #990000">;</span>
+   <span style="color: #009900">char</span> b<span style="color: #990000">;</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">func</span></span><span style="color: #990000">();</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">Vim</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> c<span style="color: #990000">);</span>
+   <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">instancefunc</span></span><span style="color: #990000">();</span>
+   <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">Emacs</span></span><span style="color: #990000">();</span>
+<span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+
+<span style="color: #009900">int</span> Test<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Emacs</span></span><span style="color: #990000">()</span> <span style="color: #FF0000">{</span>
+   <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"From Test::Emacs!</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">8</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">int</span> Test<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Vim</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> c<span style="color: #990000">)</span> <span style="color: #FF0000">{</span>
+   <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"From Test::Vim %d</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">,</span> c<span style="color: #990000">);</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">()</span> <span style="color: #FF0000">{</span>
+   <span style="color: #008080">Test</span> c<span style="color: #990000">;</span>
+   c<span style="color: #990000">.</span>a <span style="color: #990000">=</span> <span style="color: #993399">9</span><span style="color: #990000">;</span>
+   Test<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Vim</span></span><span style="color: #990000">(</span><span style="color: #993399">32</span><span style="color: #990000">);</span>
+   c<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Emacs</span></span><span style="color: #990000">();</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre></div></div>
+<div class="paragraph"><p>実行結果は次のようになる。正しく実行されていると分かる。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>$ ./hanando -r -f -cpp cppsamples/test2.cpp &gt; cppsamples/test2.s
+$ gcc -g cppsamples/test2.s -o test2
+$ ./cppsamples/test2
+From Test::Vim 32
+From Test::Emacs!</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_ステップ実行">ステップ実行</h3>
+<div class="paragraph"><p>hanando で出力した実行ファイルをデバッガ (GNU Debugger) で追うために、ステップ実行できるようにした。GNU Assembler の <code>.loc</code> や <code>.file</code> 疑似命令を用いた。</p></div>
+<div class="paragraph"><p>なお、変数の内容を確認するには、バイナリにデバッグ情報を埋め込む必要がある。その規格に DWARF, STUBS があり、DWARF は挫折し、STUBS は埋め込みバイナリがうまく gdbで検出されず挫折した。</p></div>
+<div class="paragraph"><p>以下の実例では、 <code>./main</code> というセルフホストしたバイナリの <code>main()</code> 関数にブレークポイントを設定し、ステップ実行を行う。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[hanando-fukui]$ make self
+./hanando -r -f main.c &gt; main.s
+gcc -g main.s -o main
+[hanando-fukui]$ gdb -q --args ./hanando -r -f main.c
+Reading symbols from ./hanando...
+(gdb) b main
+Breakpoint 1 at 0xd863: file main.c, line 4108.
+(gdb) r
+Starting program: /(パスは編集した)/hanando-fukui/hanando -r -f main.c
+
+Breakpoint 1, main (argc=4, argv=0x7fffffffe4f8) at main.c:4108
+4108       if (argc &lt; 2) {
+(gdb) n
+4111       test_map();
+(gdb) n
+4113       tokens = new_vector();
+(gdb) n
+4114       int is_from_file = 0;
+(gdb) n
+4115       int is_register = 0;</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_静的ディスパッチ">静的ディスパッチ</h3>
+<div class="paragraph"><p>いわゆる "テンプレート"のごく一部</p></div>
+<div class="paragraph"><p>2019/8/19 時点でクラスに対するディスパッチを実装しており、また実装方針が変更になることがあろうが、ひとまず現時点での実装は、
+関数呼出を構文解析する際にはじめて型が分かるので、そのときに実体化したアセンブリコードを出力するものである。</p></div>
+<div class="paragraph"><p>また、double は未実装であるから、以下の例では 同じ <code>T add(T, T)</code> 関数を int とchar 型に対して実体化して、計算結果がオーバーフローするか否かで動作を検証した。</p></div>
+<div class="paragraph"><p>なお、現時点ではテンプレートの多重展開ができない、またクラスに対して適用できない問題点がある。</p></div>
+<div class="paragraph"><p>追記: 成果発表時には <code>char</code> や <code>int</code> などの組み込み型のみ対応だったが、そののち組み込みでない型にも対応した。</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">#include</span></span> <span style="color: #FF0000">&lt;stdio.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span><span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">T</span><span style="color: #990000">&gt;</span> <span style="color: #008080">T</span> <span style="font-weight: bold"><span style="color: #000000">add</span></span><span style="color: #990000">(</span><span style="color: #008080">T</span> a<span style="color: #990000">,</span> <span style="color: #008080">T</span> b<span style="color: #990000">)</span> <span style="color: #FF0000">{</span>
+   <span style="color: #008080">T</span> c<span style="color: #990000">;</span>
+   c <span style="color: #990000">=</span> a<span style="color: #990000">+</span>b<span style="color: #990000">;</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> c<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">()</span> <span style="color: #FF0000">{</span>
+   <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"int: %d</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">,</span> add<span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span><span style="color: #993399">234</span><span style="color: #990000">,</span> <span style="color: #993399">123</span><span style="color: #990000">));</span>
+   <span style="font-weight: bold"><span style="color: #000000">printf</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"char: %d</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">,</span> add<span style="color: #990000">&lt;</span><span style="color: #009900">char</span><span style="color: #990000">&gt;(</span><span style="color: #993399">234</span><span style="color: #990000">,</span> <span style="color: #993399">123</span><span style="color: #990000">));</span>
+   <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre></div></div>
+<div class="paragraph"><p>実行結果は次の通り。 char 型とint 型で異なる値を返していると分かる。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[hanando-fukui]$ ./cppsamples/test3
+int: 357
+char: 101
+[hanando-fukui]$</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_その他">その他</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>追記: 今日8月19日時点でのソースコード行数を <a href="http://github.com/AlDanial/cloc">cloc</a> にて調査すると、次にあるようにおおむね3780行程度。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>$ cloc main.c main.h
+       2 text files.
+classified 2 files
+       2 unique files.
+       0 files ignored.
+
+github.com/AlDanial/cloc v 1.82  T=0.06 s (34.1 files/s, 75068.5 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                1            306            285           3573
+C/C++ Header                     1             17             15            207
+-------------------------------------------------------------------------------
+SUM:                             2            323            300           3780
+-------------------------------------------------------------------------------</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_感想および今後">感想および今後</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+綺麗に実装しないとバグだらけで身動きがとれなくなる
+</p>
+</li>
+<li>
+<p>
+規格はよくできている、先人は偉大
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+これに関連して、規格の理解が曖昧なまま実装すべきではないと分かる。 (出来てない)
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+実装前に理解と実装方針を整理するのは有効
+</p>
+</li>
+<li>
+<p>
+傲慢ではなく謙虚に、地味に地道にやっていく
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>追記: 今後 <code>Map&lt;T, U&gt;</code> や <code>Vector&lt;T&gt;</code> を実装し、コンパイラ内で使われている <code>Vector</code> や <code>Map</code> などのデータ構造を置き換えたい。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_謝辞">謝辞</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Y-II ゼミの参加者チューター講師の方々ありがとうございました。
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+講師の <a href="https://github.com/hikalium">@hikalium</a> さん <a href="https://github.com/rui314">@rui314</a> さん
+</p>
+</li>
+<li>
+<p>
+参加者の方々、とくに <a href="https://github.com/takoeight0821">@takoeight0821</a> さん
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>そのほか、裏で支えておられる (取りやすいようペットボトルを三角形に並べるなど) スタッフ や SCNOC の方々にも感謝します。</p></div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2019-08-19 17:58:51 JST
+</div>
+</div>
+</body>
+</html>
