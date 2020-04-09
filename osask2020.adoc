@@ -52,3 +52,13 @@ include::osask2020_osask.diff[]
 == Step 6: OSASK の実行 ==
 
 執筆中...
+`qemu-system-i386 -fda 4.7/OSAIMGAT.BIN` にて実行できます。
+
+image:osask2020_1.png[OSASK を TOWNS 風にて起動させたところ]
+image:osask2020_2.png[OSASK を win31 風にて起動させたところ]
+image:osask2020_3.png[OSASK を NEWSTYLE 風にて起動させたところ]
+image:osask2020_4.png[OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ]
+
+== 課題 ==
+- 解像度が QEMU 側とOSASK 側で異なる。
+- アプリケーションのソースコード配布箇所を未発見。
