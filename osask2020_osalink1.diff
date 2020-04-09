@@ -1,0 +1,15 @@
+osalink1_src_1.0 のみに存在: osalink1
+diff --color -u osalink1_src_1.0_old/osalink1.c osalink1_src_1.0/osalink1.c
+--- osalink1_src_1.0_old/osalink1.c	2010-01-14 14:28:16.000000000 +0900
++++ osalink1_src_1.0/osalink1.c	2020-03-12 02:28:34.583285671 +0900
+@@ -6,8 +6,8 @@
+ #include <ctype.h>
+ #include <string.h>
+ 
+-#define	OPTIONFILE	"OSALINK1.OPT"
+-#define	OUTPUTFILE	"OSASK.EXE"
++#define	OPTIONFILE	"osalink1.opt"
++#define	OUTPUTFILE	"osask.exe"
+ #define	BUFSIZE		2 * 1024 * 1024
+ 
+ void wordstore(char *p, const int w)

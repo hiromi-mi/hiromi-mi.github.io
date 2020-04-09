@@ -1,0 +1,193 @@
+--- 4.7_old/make_com_linux.txt	2020-04-09 18:50:22.292940385 +0900
++++ 4.7/make_com_linux.txt	2020-04-09 18:41:09.632932381 +0900
+@@ -0,0 +1,20 @@
++# Makefileのインクルードファイル
++# 全機種共通
++
++MAKE     = $(TOOLPATH)make -r
++SJISCONV = $(TOOLPATH)sjisconv -s
++CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os
++GAS2NASK = $(TOOLPATH)gas2nask -a
++NASK     = $(TOOLPATH)nask
++OBJ2BIM  = $(TOOLPATH)obj2bim
++BIM2BIN  = $(TOOLPATH)bim2bin
++CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)
++ASKA     = $(TOOLPATH)aska
++NASKCNV  = $(TOOLPATH)naskcnv0 -l -s
++GOLIB    = $(TOOLPATH)golib00
++OSALINK  = $(TOOLPATH)osalink1
++EDIMG    = $(TOOLPATH)edimg
++DELE     = rm -f
++COPY     = cp
++
++TXT2BIN  = $(TOOLPATH)txt2bin
+diff --color -r -u 4.7_old/Makefile 4.7/Makefile
+--- 4.7_old/Makefile	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/Makefile	2020-03-12 02:38:46.985872134 +0900
+@@ -3,7 +3,7 @@
+ 
+ TOOLPATH = ../z_tools/
+ 
+-include make_com.txt
++include make_com_linux.txt
+ 
+ ALL :
+ # デフォルト動作：各自好きなようにカスタマイズすればいい
+@@ -16,7 +16,7 @@
+ 
+ at :
+ 	$(MAKE) -C pcat
+-	$(COPY) pcat\OSASK.EXE OSASK_AT.EXE
++	$(COPY) pcat/osask.exe OSASK_AT.EXE
+ 	$(EDIMG) binin:OSASK_AT.EXE exe2bin seg:2048 binout:OSASK_AT.SYS
+ 
+ tw :
+@@ -31,14 +31,14 @@
+ 
+ qe :
+ 	$(MAKE) -C qemu
+-	$(COPY) qemu\OSASK.EXE OSASK_QE.EXE
++	$(COPY) qemu/osask.exe OSASK_QE.EXE
+ 	$(EDIMG) binin:OSASK_QE.EXE exe2bin seg:2048 binout:OSASK_QE.SYS
+ 
+-run : Makefile qemu/edimgopt.txt $(TOOLPATH)osa_qemu/OSAIMGAT.BIN
++run : Makefile qemu/edimgopt.txt img_at
+ 	$(MAKE) qe
+-	$(EDIMG) imgin:$(TOOLPATH)osa_qemu/OSAIMGAT.BIN @qemu/edimgopt.txt \
++	$(EDIMG) imgin:OSAIMGAT.BIN @qemu/edimgopt.txt \
+ 		imgout:qemu/OSAIMGQE.BIN imgout:$(TOOLPATH)qemu/FDIMAGE0.BIN
+-	$(MAKE) -C $(TOOLPATH)qemu
++	# $(MAKE) -C $(TOOLPATH)qemu
+ 
+ bo :
+ 	$(MAKE) -C bochs
+diff --color -r -u 4.7_old/make_com_linux.txt 4.7/make_com_linux.txt
+--- 4.7_old/make_com_linux.txt	2020-04-09 18:50:22.292940385 +0900
++++ 4.7/make_com_linux.txt	2020-04-09 18:41:09.632932381 +0900
+@@ -0,0 +1,20 @@
++# Makefileのインクルードファイル
++# 全機種共通
++
++MAKE     = $(TOOLPATH)make -r
++SJISCONV = $(TOOLPATH)sjisconv -s
++CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os
++GAS2NASK = $(TOOLPATH)gas2nask -a
++NASK     = $(TOOLPATH)nask
++OBJ2BIM  = $(TOOLPATH)obj2bim
++BIM2BIN  = $(TOOLPATH)bim2bin
++CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)
++ASKA     = $(TOOLPATH)aska
++NASKCNV  = $(TOOLPATH)naskcnv0 -l -s
++GOLIB    = $(TOOLPATH)golib00
++OSALINK  = $(TOOLPATH)osalink1
++EDIMG    = $(TOOLPATH)edimg
++DELE     = rm -f
++COPY     = cp
++
++TXT2BIN  = $(TOOLPATH)txt2bin
+diff --color -r -u 4.7_old/make_inc.txt 4.7/make_inc.txt
+--- 4.7_old/make_inc.txt	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/make_inc.txt	2020-03-12 02:52:50.287393362 +0900
+@@ -2,9 +2,9 @@
+ # 各種設定用
+ 
+ # ウィンドウデザイン
+-DESIGN = WIN9X
+ # DESIGN = WIN9X
+-# DESIGN = TMENU
++# DESIGN = WIN9X
++DESIGN = TMENU
+ # DESIGN = WIN31
+ # DESIGN = CHO_OSASK
+ # DESIGN = NEWSTYLE
+diff --color -r -u 4.7_old/make_pk0.txt 4.7/make_pk0.txt
+--- 4.7_old/make_pk0.txt	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/make_pk0.txt	2020-03-12 02:16:47.110297643 +0900
+@@ -1,8 +1,11 @@
+ # linker options for pokon0
+ 
+-STK_PK_AT = 1m
+-STK_PK_TW = 1m
+-STK_PK_NE = 1m
++#STK_PK_AT = 1m
++#STK_PK_TW = 1m
++#STK_PK_NE = 1m
++STK_PK_AT = 16k
++STK_PK_TW = 16k
++STK_PK_NE = 16k
+ 
+ MLC_PK_AT = 90k
+ MLC_PK_TW = 90k
+diff --color -r -u 4.7_old/pcat/Makefile 4.7/pcat/Makefile
+--- 4.7_old/pcat/Makefile	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/pcat/Makefile	2020-03-12 01:00:18.084998684 +0900
+@@ -6,13 +6,13 @@
+ VPATH = ..
+ 
+ include ../make_inc.txt
+-include ../make_com.txt
++include ../make_com_linux.txt
+ include ../make_wm0.txt
+ include ../make_pk0.txt
+ 
+ DEFINES = $(DEFINES_AT) -DPCAT -D$(DESIGN)
+ 
+-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt
++MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt
+ 
+ ALL :
+ 	$(MAKE) OSASK.EXE
+diff --color -r -u 4.7_old/pokon0.c 4.7/pokon0.c
+--- 4.7_old/pokon0.c	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/pokon0.c	2020-03-12 02:26:51.892851963 +0900
+@@ -97,7 +97,7 @@
+ 	{ "SH1", "SHIBAI1 BIN" }
+ };
+ 
+-typedef unsigned char UCHAR;
++//typedef unsigned char UCHAR;
+ 
+ struct STR_BANK *banklist;
+ struct SGG_FILELIST *file;
+diff --color -r -u 4.7_old/qemu/Makefile 4.7/qemu/Makefile
+--- 4.7_old/qemu/Makefile	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/qemu/Makefile	2020-03-12 02:36:48.895373377 +0900
+@@ -5,16 +5,16 @@
+ INCPATH  = ../../z_tools/guigui00/
+ 
+ include ../make_inc.txt
+-include ../make_com.txt
++include ../make_com_linux.txt
+ 
+-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt
++MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt
+ 
+ ALL :
+ 	$(MAKE) OSASK.EXE
+ 
+ OSASK.EXE : $(MKFL) osalink1.opt timerdrv.tek
+ 	$(MAKE) -C .. at
+-	$(COPY) ..\osask_at.exe osask_at.exe
++	$(COPY) ../OSASK_AT.EXE osask_at.exe
+ 	$(OSALINK)
+ 	$(DELE) osask_at.exe
+ 
+diff --color -r -u 4.7_old/sgg00lib/Makefile 4.7/sgg00lib/Makefile
+--- 4.7_old/sgg00lib/Makefile	2009-12-11 05:38:13.000000000 +0900
++++ 4.7/sgg00lib/Makefile	2020-03-11 23:58:23.409309915 +0900
+@@ -5,13 +5,13 @@
+ INCPATH  = ../../z_tools/guigui00/
+ 
+ include ../make_inc.txt
+-include ../make_com.txt
++include ../make_com_linux.txt
+ 
+ DEFINES += -DPCAT -D$(DESIGN)
+ 
+ TARGET = sgg00lib.lib
+ OBJS   = execcmd.obj execcmd0.obj execcmd1.obj fwinman.obj fpokon.obj fdebug.obj
+-MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com.txt
++MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt
+ 
+ ALL :
+ 	$(MAKE) sgg00lib.lib

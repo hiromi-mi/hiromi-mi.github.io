@@ -1,0 +1,1158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.10" />
+<title>ソースコードからOSASKをビルドして起動させる (2020年版)</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>ソースコードからOSASKをビルドして起動させる (2020年版)</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>手元環境は以下の通りです。
+- Arch Linux
+- gcc 9.3.0
+- clang 9.0.1</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_1_はりぼてos向けtolset_の用意">Step 1: はりぼてOS向けtolset の用意</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>hikalium さんなどによりメンテナンスがなされているはりぼてOS向けtolset <a href="https://github.com/HariboteOS/z_tools_linux">z_tools_linux</a> を取得し、 <code>z_tools</code> にコピーします。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_2_asuka_をビルド">Step 2: Asuka をビルド</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>OSDN のダウンロードページ <a href="https://ja.osdn.net/projects/osask/releases/">https://ja.osdn.net/projects/osask/releases/</a> から
+<code>Asuka_src_1.1.tar.gz</code> <span class="footnote"><br />[派生版は原則名称を変更することになっており、これは hideyosi さんによる ASKA の派生物です。]<br /></span> をダウンロードします。
+伸張すると <code>Asuka_src_1.1/</code> なるディレクトリが生成されているはずです。</p></div>
+<div class="paragraph"><p>そして次のパッチ <a href="osask2020_Asuka.diff">osask2020_Asuka.diff</a> を <code>patch -p0 &lt; osask2020_Asuka.diff</code> として当てます。このパッチでは <code>strcmp()</code> などの関数を明示的に宣言した上で <code>Makefile</code> を書き換えます。(この差分は KL-01 に従います。)</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>Asuka_src_1.1 のみに存在: Asuka
+diff --color -u Asuka_src_1.1_old/Makefile Asuka_src_1.1/Makefile
+<span style="color: #FF6600">--- Asuka_src_1.1_old/Makefile  2010-01-30 03:32:20.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/Makefile      2020-03-12 10:24:52.656154565 +0900</span>
+<span style="color: #0000FF">@@ -5,13 +5,13 @@</span>
+ O = o
+ A = a
+ C = c
+<span style="color: #FF6600">-CPP = cpp</span>
+<span style="color: #FF6600">-CC = g++</span>
+<span style="color: #FF6600">-LD = g++</span>
+<span style="color: #FF6600">-GC = gcc</span>
+<span style="color: #FF6600">-CFLAGS = -O2 -I.</span>
+<span style="color: #FF6600">-CPPFLAGS =</span>
+<span style="color: #FF6600">-PGNAME = Asuka.exe</span>
+<span style="color: #009900">+CPP = clang++</span>
+<span style="color: #009900">+CC = clang++</span>
+<span style="color: #009900">+LD = clang++</span>
+<span style="color: #009900">+GC = clang</span>
+<span style="color: #009900">+CFLAGS = -I. -g</span>
+<span style="color: #009900">+CPPFLAGS = -DLINUX</span>
+<span style="color: #009900">+PGNAME = aska</span>
+
+ #
+ # SRC Directory
+Asuka_src_1.1 のみに存在: aska
+diff --color -u Asuka_src_1.1_old/filepath.h Asuka_src_1.1/filepath.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/filepath.h        2003-09-13 02:27:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/filepath.h    2020-03-11 23:23:46.460537970 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+
+ #include &lt;string&gt;
+ #include &lt;list&gt;
+Asuka_src_1.1 のみに存在: filepath.o
+diff --color -u Asuka_src_1.1_old/generator.h Asuka_src_1.1/generator.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/generator.h       2003-09-13 02:28:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/generator.h   2020-03-11 23:24:28.960717476 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,9 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+<span style="color: #009900">+#include &lt;cstring&gt;</span>
+ #include &lt;iostream&gt;
+
+ #include &lt;string&gt;
+Asuka_src_1.1 のみに存在: generator.o
+Asuka_src_1.1 のみに存在: main.o
+diff --color -u Asuka_src_1.1_old/module.h Asuka_src_1.1/module.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/module.h  2010-01-10 21:41:08.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/module.h      2020-03-11 23:24:12.870649520 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+ #ifndef LINUX
+ #include &lt;io.h&gt;
+ #endif
+Asuka_src_1.1 のみに存在: module.o
+diff --color -u Asuka_src_1.1_old/parser.h Asuka_src_1.1/parser.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/parser.h  2003-09-13 02:30:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/parser.h      2020-03-11 23:23:49.550551019 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+ #include &lt;iostream&gt;
+
+ #include &lt;string&gt;
+Asuka_src_1.1 のみに存在: parser.o
+diff --color -u Asuka_src_1.1_old/scanner.h Asuka_src_1.1/scanner.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/scanner.h 2003-09-13 02:31:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/scanner.h     2020-03-11 23:26:43.171284308 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,9 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstring&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+ #include &lt;iostream&gt;
+
+ #include &lt;string&gt;
+Asuka_src_1.1 のみに存在: scanner.o
+diff --color -u Asuka_src_1.1_old/stringx.h Asuka_src_1.1/stringx.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/stringx.h 2003-09-13 02:31:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/stringx.h     2020-03-11 23:23:51.060557399 +0900</span>
+<span style="color: #0000FF">@@ -6,9 +6,9 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;ctype.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+<span style="color: #009900">+#include &lt;cctype&gt;</span>
+ #include &lt;string&gt;
+ #include &lt;list&gt;
+ #include &lt;map&gt;
+Asuka_src_1.1 のみに存在: stringx.o
+diff --color -u Asuka_src_1.1_old/table.h Asuka_src_1.1/table.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/table.h   2003-09-13 02:31:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/table.h       2020-03-11 23:23:51.740560270 +0900</span>
+<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+ #include &lt;iostream&gt;
+ #include &lt;string&gt;
+ #include &lt;list&gt;
+Asuka_src_1.1 のみに存在: table.o
+diff --color -u Asuka_src_1.1_old/textmodule.h Asuka_src_1.1/textmodule.h
+<span style="color: #FF6600">--- Asuka_src_1.1_old/textmodule.h      2003-09-13 02:32:00.000000000 +0900</span>
+<span style="color: #009900">+++ Asuka_src_1.1/textmodule.h  2020-03-11 23:23:52.330562760 +0900</span>
+<span style="color: #0000FF">@@ -7,8 +7,8 @@</span>
+
+ #pragma warning(disable:4786)
+
+<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
+<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
+<span style="color: #009900">+#include &lt;cstdio&gt;</span>
+<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
+
+ #include &lt;string&gt;
+ #include &lt;list&gt;
+Asuka_src_1.1 のみに存在: textmodule.o</tt></pre></div></div>
+<div class="paragraph"><p><code>make</code> コマンドでビルドすると、 <code>aska</code> が生成されているはずです。
+生成物は <code>z_tools/aska</code> としてコピーします。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_3_go_の生成">Step 3: GO の生成</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>GO <span class="footnote"><br />[GO言語ではなく、gcc から派生したC言語のコンパイラ。]<br /></span>
+をビルドします。</p></div>
+<div class="paragraph"><p>執筆中&#8230;</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_4_osalink_をビルド">Step 4: osalink をビルド</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>OSDN のダウンロードページ 28GO 0031 から <code>osalink1_src_1.0.tar.gz</code> をダウンロードします。</p></div>
+<div class="paragraph"><p>これは素直に <code>pushd osalink1_src_1.0</code> にて移り <code>clang osalink1.c -o osalink1</code> にてビルドできます。</p></div>
+<div class="paragraph"><p>生成物は <code>z_tools/osalink1</code> としてコピーします。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_5_osask_のビルド">Step 5: OSASK のビルド</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>そして次のパッチ
+<a href="osask2020_osask.diff">osask2020_osask.diff</a> を当てます。Makefile 変更や不必要な定義の削除があります。(KL-01 に従います。)</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #FF6600">--- 4.7_old/make_com_linux.txt  2020-04-09 18:50:22.292940385 +0900</span>
+<span style="color: #009900">+++ 4.7/make_com_linux.txt      2020-04-09 18:41:09.632932381 +0900</span>
+<span style="color: #0000FF">@@ -0,0 +1,20 @@</span>
+<span style="color: #009900">+# Makefile�̃C���N���[�h�t�@�C��</span>
+<span style="color: #009900">+# �S�@�틤��</span>
+<span style="color: #009900">+</span>
+<span style="color: #009900">+MAKE     = $(TOOLPATH)make -r</span>
+<span style="color: #009900">+SJISCONV = $(TOOLPATH)sjisconv -s</span>
+<span style="color: #009900">+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os</span>
+<span style="color: #009900">+GAS2NASK = $(TOOLPATH)gas2nask -a</span>
+<span style="color: #009900">+NASK     = $(TOOLPATH)nask</span>
+<span style="color: #009900">+OBJ2BIM  = $(TOOLPATH)obj2bim</span>
+<span style="color: #009900">+BIM2BIN  = $(TOOLPATH)bim2bin</span>
+<span style="color: #009900">+CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)</span>
+<span style="color: #009900">+ASKA     = $(TOOLPATH)aska</span>
+<span style="color: #009900">+NASKCNV  = $(TOOLPATH)naskcnv0 -l -s</span>
+<span style="color: #009900">+GOLIB    = $(TOOLPATH)golib00</span>
+<span style="color: #009900">+OSALINK  = $(TOOLPATH)osalink1</span>
+<span style="color: #009900">+EDIMG    = $(TOOLPATH)edimg</span>
+<span style="color: #009900">+DELE     = rm -f</span>
+<span style="color: #009900">+COPY     = cp</span>
+<span style="color: #009900">+</span>
+<span style="color: #009900">+TXT2BIN  = $(TOOLPATH)txt2bin</span>
+diff --color -r -u 4.7_old/Makefile 4.7/Makefile
+<span style="color: #FF6600">--- 4.7_old/Makefile    2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/Makefile        2020-03-12 02:38:46.985872134 +0900</span>
+<span style="color: #0000FF">@@ -3,7 +3,7 @@</span>
+
+ TOOLPATH = ../z_tools/
+
+<span style="color: #FF6600">-include make_com.txt</span>
+<span style="color: #009900">+include make_com_linux.txt</span>
+
+ ALL :
+ # �f�t�H���g����F�e���D���Ȃ悤�ɃJ�X�^�}�C�Y����΂���
+<span style="color: #0000FF">@@ -16,7 +16,7 @@</span>
+
+ at :
+        $(MAKE) -C pcat
+<span style="color: #FF6600">-       $(COPY) pcat\OSASK.EXE OSASK_AT.EXE</span>
+<span style="color: #009900">+       $(COPY) pcat/osask.exe OSASK_AT.EXE</span>
+        $(EDIMG) binin:OSASK_AT.EXE exe2bin seg:2048 binout:OSASK_AT.SYS
+
+ tw :
+<span style="color: #0000FF">@@ -31,14 +31,14 @@</span>
+
+ qe :
+        $(MAKE) -C qemu
+<span style="color: #FF6600">-       $(COPY) qemu\OSASK.EXE OSASK_QE.EXE</span>
+<span style="color: #009900">+       $(COPY) qemu/osask.exe OSASK_QE.EXE</span>
+        $(EDIMG) binin:OSASK_QE.EXE exe2bin seg:2048 binout:OSASK_QE.SYS
+
+<span style="color: #FF6600">-run : Makefile qemu/edimgopt.txt $(TOOLPATH)osa_qemu/OSAIMGAT.BIN</span>
+<span style="color: #009900">+run : Makefile qemu/edimgopt.txt img_at</span>
+        $(MAKE) qe
+<span style="color: #FF6600">-       $(EDIMG) imgin:$(TOOLPATH)osa_qemu/OSAIMGAT.BIN @qemu/edimgopt.txt \</span>
+<span style="color: #009900">+       $(EDIMG) imgin:OSAIMGAT.BIN @qemu/edimgopt.txt \</span>
+                imgout:qemu/OSAIMGQE.BIN imgout:$(TOOLPATH)qemu/FDIMAGE0.BIN
+<span style="color: #FF6600">-       $(MAKE) -C $(TOOLPATH)qemu</span>
+<span style="color: #009900">+       # $(MAKE) -C $(TOOLPATH)qemu</span>
+
+ bo :
+        $(MAKE) -C bochs
+diff --color -r -u 4.7_old/make_com_linux.txt 4.7/make_com_linux.txt
+<span style="color: #FF6600">--- 4.7_old/make_com_linux.txt  2020-04-09 18:50:22.292940385 +0900</span>
+<span style="color: #009900">+++ 4.7/make_com_linux.txt      2020-04-09 18:41:09.632932381 +0900</span>
+<span style="color: #0000FF">@@ -0,0 +1,20 @@</span>
+<span style="color: #009900">+# Makefile�̃C���N���[�h�t�@�C��</span>
+<span style="color: #009900">+# �S�@�틤��</span>
+<span style="color: #009900">+</span>
+<span style="color: #009900">+MAKE     = $(TOOLPATH)make -r</span>
+<span style="color: #009900">+SJISCONV = $(TOOLPATH)sjisconv -s</span>
+<span style="color: #009900">+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os</span>
+<span style="color: #009900">+GAS2NASK = $(TOOLPATH)gas2nask -a</span>
+<span style="color: #009900">+NASK     = $(TOOLPATH)nask</span>
+<span style="color: #009900">+OBJ2BIM  = $(TOOLPATH)obj2bim</span>
+<span style="color: #009900">+BIM2BIN  = $(TOOLPATH)bim2bin</span>
+<span style="color: #009900">+CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)</span>
+<span style="color: #009900">+ASKA     = $(TOOLPATH)aska</span>
+<span style="color: #009900">+NASKCNV  = $(TOOLPATH)naskcnv0 -l -s</span>
+<span style="color: #009900">+GOLIB    = $(TOOLPATH)golib00</span>
+<span style="color: #009900">+OSALINK  = $(TOOLPATH)osalink1</span>
+<span style="color: #009900">+EDIMG    = $(TOOLPATH)edimg</span>
+<span style="color: #009900">+DELE     = rm -f</span>
+<span style="color: #009900">+COPY     = cp</span>
+<span style="color: #009900">+</span>
+<span style="color: #009900">+TXT2BIN  = $(TOOLPATH)txt2bin</span>
+diff --color -r -u 4.7_old/make_inc.txt 4.7/make_inc.txt
+<span style="color: #FF6600">--- 4.7_old/make_inc.txt        2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/make_inc.txt    2020-03-12 02:52:50.287393362 +0900</span>
+<span style="color: #0000FF">@@ -2,9 +2,9 @@</span>
+ # �e��ݒ�p
+
+ # �E�B���h�E�f�U�C��
+<span style="color: #FF6600">-DESIGN = WIN9X</span>
+ # DESIGN = WIN9X
+<span style="color: #FF6600">-# DESIGN = TMENU</span>
+<span style="color: #009900">+# DESIGN = WIN9X</span>
+<span style="color: #009900">+DESIGN = TMENU</span>
+ # DESIGN = WIN31
+ # DESIGN = CHO_OSASK
+ # DESIGN = NEWSTYLE
+diff --color -r -u 4.7_old/make_pk0.txt 4.7/make_pk0.txt
+<span style="color: #FF6600">--- 4.7_old/make_pk0.txt        2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/make_pk0.txt    2020-03-12 02:16:47.110297643 +0900</span>
+<span style="color: #0000FF">@@ -1,8 +1,11 @@</span>
+ # linker options for pokon0
+
+<span style="color: #FF6600">-STK_PK_AT = 1m</span>
+<span style="color: #FF6600">-STK_PK_TW = 1m</span>
+<span style="color: #FF6600">-STK_PK_NE = 1m</span>
+<span style="color: #009900">+#STK_PK_AT = 1m</span>
+<span style="color: #009900">+#STK_PK_TW = 1m</span>
+<span style="color: #009900">+#STK_PK_NE = 1m</span>
+<span style="color: #009900">+STK_PK_AT = 16k</span>
+<span style="color: #009900">+STK_PK_TW = 16k</span>
+<span style="color: #009900">+STK_PK_NE = 16k</span>
+
+ MLC_PK_AT = 90k
+ MLC_PK_TW = 90k
+diff --color -r -u 4.7_old/pcat/Makefile 4.7/pcat/Makefile
+<span style="color: #FF6600">--- 4.7_old/pcat/Makefile       2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/pcat/Makefile   2020-03-12 01:00:18.084998684 +0900</span>
+<span style="color: #0000FF">@@ -6,13 +6,13 @@</span>
+ VPATH = ..
+
+ include ../make_inc.txt
+<span style="color: #FF6600">-include ../make_com.txt</span>
+<span style="color: #009900">+include ../make_com_linux.txt</span>
+ include ../make_wm0.txt
+ include ../make_pk0.txt
+
+ DEFINES = $(DEFINES_AT) -DPCAT -D$(DESIGN)
+
+<span style="color: #FF6600">-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
+<span style="color: #009900">+MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
+
+ ALL :
+        $(MAKE) OSASK.EXE
+diff --color -r -u 4.7_old/pokon0.c 4.7/pokon0.c
+<span style="color: #FF6600">--- 4.7_old/pokon0.c    2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/pokon0.c        2020-03-12 02:26:51.892851963 +0900</span>
+<span style="color: #0000FF">@@ -97,7 +97,7 @@</span>
+        { "SH1", "SHIBAI1 BIN" }
+ };
+
+<span style="color: #FF6600">-typedef unsigned char UCHAR;</span>
+<span style="color: #009900">+//typedef unsigned char UCHAR;</span>
+
+ struct STR_BANK *banklist;
+ struct SGG_FILELIST *file;
+diff --color -r -u 4.7_old/qemu/Makefile 4.7/qemu/Makefile
+<span style="color: #FF6600">--- 4.7_old/qemu/Makefile       2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/qemu/Makefile   2020-03-12 02:36:48.895373377 +0900</span>
+<span style="color: #0000FF">@@ -5,16 +5,16 @@</span>
+ INCPATH  = ../../z_tools/guigui00/
+
+ include ../make_inc.txt
+<span style="color: #FF6600">-include ../make_com.txt</span>
+<span style="color: #009900">+include ../make_com_linux.txt</span>
+
+<span style="color: #FF6600">-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
+<span style="color: #009900">+MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
+
+ ALL :
+        $(MAKE) OSASK.EXE
+
+ OSASK.EXE : $(MKFL) osalink1.opt timerdrv.tek
+        $(MAKE) -C .. at
+<span style="color: #FF6600">-       $(COPY) ..\osask_at.exe osask_at.exe</span>
+<span style="color: #009900">+       $(COPY) ../OSASK_AT.EXE osask_at.exe</span>
+        $(OSALINK)
+        $(DELE) osask_at.exe
+
+diff --color -r -u 4.7_old/sgg00lib/Makefile 4.7/sgg00lib/Makefile
+<span style="color: #FF6600">--- 4.7_old/sgg00lib/Makefile   2009-12-11 05:38:13.000000000 +0900</span>
+<span style="color: #009900">+++ 4.7/sgg00lib/Makefile       2020-03-11 23:58:23.409309915 +0900</span>
+<span style="color: #0000FF">@@ -5,13 +5,13 @@</span>
+ INCPATH  = ../../z_tools/guigui00/
+
+ include ../make_inc.txt
+<span style="color: #FF6600">-include ../make_com.txt</span>
+<span style="color: #009900">+include ../make_com_linux.txt</span>
+
+ DEFINES += -DPCAT -D$(DESIGN)
+
+ TARGET = sgg00lib.lib
+ OBJS   = execcmd.obj execcmd0.obj execcmd1.obj fwinman.obj fpokon.obj fdebug.obj
+<span style="color: #FF6600">-MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
+<span style="color: #009900">+MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
+
+ ALL :
+        $(MAKE) sgg00lib.lib</tt></pre></div></div>
+<div class="paragraph"><p><code>make</code> でビルドします。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_6_osask_の実行">Step 6: OSASK の実行</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>執筆中&#8230;</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated
+ 2020-04-09 18:57:05 JST
+</div>
+</div>
+</body>
+</html>
