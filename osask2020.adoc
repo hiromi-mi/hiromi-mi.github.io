@@ -59,12 +59,19 @@ include::osask2020_osask.diff[]
 `qemu-system-i386 -fda 4.7/OSAIMGAT.BIN` にて実行できます。
 
 `4.7/make_inc.txt` の `DESIGN` や `FONTSRC` を書き換えて見た目の違うOSASK をビルドできます。
+
+.WIN95 風モードにしたところ
+image::osask2020_0.png[OSASK を WIN95 風にて起動させたところ]
+
 .TOWNS 風モードにしたところ
 image::osask2020_1.png[OSASK を TOWNS 風にて起動させたところ]
+
 .Windows 3.1 風モードにしたところ
 image::osask2020_2.png[OSASK を win31 風にて起動させたところ]
+
 .NEWSTYLE  風モードにしたところ
 image::osask2020_3.png[OSASK を NEWSTYLE 風にて起動させたところ]
+
 .超漢字風モードにしたところ
 image::osask2020_4.png[OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ]
 
