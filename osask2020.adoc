@@ -1,7 +1,13 @@
 = ソースコードからOSASKをビルドして起動させる (2020年版) =
 
+このページでは、OSASK をソースコードからビルドする方法を説明します。(アプリはバイナリです)
+2020年時点でコンパイルするためには、一部ソースコードの書き換えが必要でしたので、それを含めて記します。
+
+.動作させたデモ
+video::osask2020_demo.mp4[width=480]
+
 .手元環境は以下の通りです。
-* Arch Linux
+* Arch Linux 64bit
 * gcc 9.3.0
 * clang 9.0.1
 
@@ -26,24 +32,30 @@ include::osask2020_Asuka.diff[]
 `make` コマンドでビルドすると、 `aska` が生成されているはずです。
 生成物は `z_tools/aska` としてコピーします。
 
-== Step 3: GO の生成 ==
-GO footnote:[GO言語ではなく、gcc から派生したC言語のコンパイラ。]
-をビルドします。
+== Step 3: tolset の不足ライブラリを埋める ==
 
+Step 1 で取得したライブラリは「はりぼてOS」をコンパイルすることに最適化されており、OSASK をコンパイルするには一部不足しているライブラリがあります。そこで、
+28GO footnote:[GO言語ではなく、gcc から派生したC言語のコンパイラ。] から必要なライブラリを取得してきます。
+
+まずは、 `28GO_K_0033` および `28GO_K_0031` をOSDN のページからダウンロードして伸張します。
+
+=== guigui00 ===
 `mkdir z_tools/guigui00` としてその中に
 `28GO_K_0033` の `go_lib/go_lib.h` `guigui00.h` `include/stddef.h` `guigui00/stdlib.h` を複製します。
-`z_tools/guigui00/stdlib.h` に次のパッチ link:osask2020_stdlib.diff[osask2020_stdlib.diff] を当てます。
+
+その後、`z_tools/guigui00/stdlib.h` に次のパッチ link:osask2020_stdlib.diff[osask2020_stdlib.diff] (KL-01 に従います) を当てます。
 
 
-`28GO_K_0033/gg00libc/` に次のパッチ link:osask2020_gg00libc.diff[osask2020_gg00libc.diff] を当てます。
-`pushd 28GO_K_0033/gg00libc/` のと `make` すると `28GO_K_0033/gg00libc/gg00libc.lib` が生成されます。
- `28GO_K_0033/gg00libc/gg00libc.lib` を `z_tools/gg00libc/gg00libc.lib` にコピーします。
-執筆中...
+=== gg00libc ===
+`28GO_K_0033/gg00libc/` に次のパッチ link:osask2020_gg00libc.diff[osask2020_gg00libc.diff] (KL_01 に従います) を当てます。
 
+`pushd 28GO_K_0033/gg00libc/` として `make` すると `28GO_K_0033/gg00libc/gg00libc.lib` が生成されます。
 
-`go_lib/GO_lib.h` に `include/go_lib.h` からシムリンクを貼ります。
+最後に、`28GO_K_0033/gg00libc/gg00libc.lib` を `z_tools/guigui00/gg00libc.lib` にコピーします。
+
 
 ////
+`go_lib/GO_lib.h` に `include/go_lib.h` からシムリンクを貼ります。
 `go_lib/` に次のパッチ link:osask2020_go_lib.diff[osask2020_go_lib.diff] を当てます。
 ////
 ////
@@ -51,11 +63,20 @@ GO footnote:[GO言語ではなく、gcc から派生したC言語のコンパイ
 不要？
 ////
 
-`make golibc` をビルドして
+=== golibc ===
+
+`28GO_K_0031` 以下に次の
+link:osask2020_28go0031.diff[osask2020_28go0031.diff] を当てます。Makefile 変更や不必要な定義の削除があります。(KL-01 に従います。)
+
+その後、 `pushd 28GO_K_0031` としたのち
+`make golibc` とビルドします。
+出来上がった `28GO_K_0031/golibc/golibc.lib` を `z_tools/guigui00/golibc.lib` にコピーします。
 
 == Step 4: osalink をビルド ==
 
 OSDN のダウンロードページ 28GO 0031 から `osalink1_src_1.0.tar.gz` をダウンロードします。
+
+link:osask2020_osalink1.diff[osask2020_osalink1.diff] を当てます。ファイル名の大文字小文字の違いに従います (KL-01 に従います。)
 
 これは素直に `pushd osalink1_src_1.0` にて移り `clang osalink1.c -o osalink1` にてビルドできます。
 
@@ -63,6 +84,7 @@ OSDN のダウンロードページ 28GO 0031 から `osalink1_src_1.0.tar.gz` �
 
 == Step 5: OSASK のビルド ==
 
+OSASK 本体のソースコードは http://osask.net/d/download/index2.html[OSASK のイージーダウンロード] ページからダウンロードし伸張します。
 そして次のパッチ
 link:osask2020_osask.diff[osask2020_osask.diff] を当てます。Makefile 変更や不必要な定義の削除があります。(KL-01 に従います。)
 
@@ -73,29 +95,60 @@ include::osask2020_osask.diff[]
 ----
 ////
 
-`make` でビルドします。
+当てたあとは `make img_at` でビルドします。すると `4.7/` 以下に `OSAIMGAT.BIN` が生成されているはずです。
 
 == Step 6: OSASK の実行 ==
 
 `qemu-system-i386 -fda 4.7/OSAIMGAT.BIN` にて実行できます。
 
+この時点ではまだ解像度が不十分ですが、後ほど `OSASK0.PSF` を導入すると高解像度で動作します。
+
+== Step 7: アプリを入れる ==
+http://hrb.osask.jp/wiki/?tools%2Fedimg[edimg] を使うとできます。
+現状では OSASK 4.7 アプリのソースコード配布箇所を見つけられておらず、既存バイナリから取り出す方法を説明します。
+
+まず先に紹介したイージーダウンロードページから、AT互換機用お勧めパックを取得し伸張します。このファイルからアプリのバイナリを取り出します。
+`apps/` 以下に OSASK 4.7 バイナリ `edimg` イメージファイルからアプリケーションを取り出します。
+....
+$ ../z_tools/edimg imgin:./osat47i/OSAIMGAT.BIN copyall from:@: to:./4.7/apps/```
+....
+
+次に、edimg でアプリを書込みます。 `apps.txt` に次の設定をします。
+
+....
+include::osask2020_apps.txt[]
+....
+
+と edimg スクリプトを書き
+....
+$ pushd 4.7 && ../z_tools/edimg @apps.txt
+....
+としてファイル `4.7/OSAAPPS.BIN` を作成します。
+
+`qemu-system-i386 -fda 4.7/OSAAPPS.BIN` にて実行できます。
+
+.アプリケーションを入れたところ
+image::./osask2020_apps.png[OSASK with Apps]
+
+== おまけ: OSASK のカスタマイズ ==
+
 `4.7/make_inc.txt` の `DESIGN` や `FONTSRC` を書き換えて見た目の違うOSASK をビルドできます。
 
 .WIN95 風モードにしたところ
-image::./osask2020_0.png[OSASK を WIN95 風にて起動させたところ]
+image::./osask2020_0.png[OSASK を WIN95 風にて起動させたところ,width=480]
 
 .TOWNS 風モードにしたところ
-image::./osask2020_1.png[OSASK を TOWNS 風にて起動させたところ]
+image::./osask2020_1.png[OSASK を TOWNS 風にて起動させたところ,width=480]
 
 .Windows 3.1 風モードにしたところ
-image::./osask2020_2.png[OSASK を win31 風にて起動させたところ]
+image::./osask2020_2.png[OSASK を win31 風にて起動させたところ,width=480]
 
 .NEWSTYLE  風モードにしたところ
-image::./osask2020_3.png[OSASK を NEWSTYLE 風にて起動させたところ]
+image::./osask2020_3.png[OSASK を NEWSTYLE 風にて起動させたところ,width=480]
 
 .超漢字風モードにしたところ
-image::./osask2020_4.png[OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ]
+image::./osask2020_4.png[OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ,width=480]
 
 == 課題 ==
-- 解像度が QEMU 側とOSASK 側で異なる。
-- アプリケーションのソースコード配布箇所を未発見。
+- アプリケーションのソースコード配布箇所を発見できていません。
+- teditc および WABA, picture0 が動作せず、例外となります。

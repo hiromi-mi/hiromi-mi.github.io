@@ -85,21 +85,6 @@ diff --color -r -u 4.7_old/make_com_linux.txt 4.7/make_com_linux.txt
 +COPY     = cp
 +
 +TXT2BIN  = $(TOOLPATH)txt2bin
-diff --color -r -u 4.7_old/make_inc.txt 4.7/make_inc.txt
---- 4.7_old/make_inc.txt	2009-12-11 05:38:13.000000000 +0900
-+++ 4.7/make_inc.txt	2020-03-12 02:52:50.287393362 +0900
-@@ -2,9 +2,9 @@
- # 各種設定用
- 
- # ウィンドウデザイン
--DESIGN = WIN9X
- # DESIGN = WIN9X
--# DESIGN = TMENU
-+# DESIGN = WIN9X
-+DESIGN = TMENU
- # DESIGN = WIN31
- # DESIGN = CHO_OSASK
- # DESIGN = NEWSTYLE
 diff --color -r -u 4.7_old/make_pk0.txt 4.7/make_pk0.txt
 --- 4.7_old/make_pk0.txt	2009-12-11 05:38:13.000000000 +0900
 +++ 4.7/make_pk0.txt	2020-03-12 02:16:47.110297643 +0900

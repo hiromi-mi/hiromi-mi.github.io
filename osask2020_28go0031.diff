@@ -1,0 +1,60 @@
+28GO_K_src_0031 縺ｮ縺ｿ縺ｫ蟄伜惠: COPYING
+diff --color -u -r 28GO_K_src_0031_old/Makefile 28GO_K_src_0031/Makefile
+--- 28GO_K_src_0031_old/Makefile	2010-01-10 11:53:07.000000000 +0900
++++ 28GO_K_src_0031/Makefile	2020-04-10 00:08:29.023216798 +0900
+@@ -1,4 +1,4 @@
+-TOOLPATH = ./z_tools/
++TOOLPATH = ../z_tools/
+ 
+ all:
+ #	$(TOOLPATH)make -C gcc
+diff --color -u -r 28GO_K_src_0031_old/golibc/Makefile 28GO_K_src_0031/golibc/Makefile
+--- 28GO_K_src_0031_old/golibc/Makefile	2010-01-10 11:53:07.000000000 +0900
++++ 28GO_K_src_0031/golibc/Makefile	2020-04-09 20:14:15.063013269 +0900
+@@ -11,12 +11,12 @@
+ # 以上5つはソースごとに書き換える
+ # OBJSを書き換えると分割コンパイル対応
+  
+-TOOLPATH =
++TOOLPATH = ../../z_tools/
+ INCPATH  = .
+ RULEFILE =
+ MAKE     = $(TOOLPATH)make -r
+ SJISCONV = $(TOOLPATH)sjisconv -s
+-CC1      = $(TOOLPATH)cc1 -I$(INCPATH) -Os -quiet -W -Wall -Werror
++CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Os -quiet -W -Wall -Werror
+ GAS2NASK = $(TOOLPATH)gas2nask -a
+ NASK     = $(TOOLPATH)nask
+ OBJ2BIM  = $(TOOLPATH)obj2bim3
+diff --color -u -r 28GO_K_src_0031_old/include/rules.mak 28GO_K_src_0031/include/rules.mak
+--- 28GO_K_src_0031_old/include/rules.mak	2010-01-09 13:22:42.000000000 +0900
++++ 28GO_K_src_0031/include/rules.mak	2020-04-09 19:55:03.642996594 +0900
+@@ -1,17 +1,17 @@
+-TOOLPATH = ../z_tools/
++TOOLPATH = ../../z_tools/
+ 
+-CPP0 = $(TOOLPATH)cpp0.exe
+-CC1 = $(TOOLPATH)cc1.exe
++CPP0 = $(TOOLPATH)gocpp0
++CC1 = $(TOOLPATH)gocc1
+ 
+-MAKE = $(TOOLPATH)make.exe
+-GAS2NASK = $(TOOLPATH)gas2nask.exe
+-NASK = $(TOOLPATH)nask.exe
+-LIBRARIAN = $(TOOLPATH)golib00.exe
+-LD = $(TOOLPATH)ld.exe
+-DEL = del
++MAKE = $(TOOLPATH)make
++GAS2NASK = $(TOOLPATH)gas2nask
++NASK = $(TOOLPATH)nask
++LIBRARIAN = $(TOOLPATH)golib00
++LD = $(TOOLPATH)ld
++DEL = rm
+ 
+-ASKA = aska.exe
+-NASKCNV = naskcnv0.exe
++ASKA = $(TOOLPATH)aska
++NASKCNV = $(TOOLPATH)naskcnv0
+ 
+ MAKER = $(MAKE) -r
+ MAKEC = $(MAKE) -C
