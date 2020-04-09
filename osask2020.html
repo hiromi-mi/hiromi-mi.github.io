@@ -780,7 +780,15 @@ clang 9.0.1
 <div class="sectionbody">
 <div class="paragraph"><p>GO <span class="footnote"><br />[GO言語ではなく、gcc から派生したC言語のコンパイラ。]<br /></span>
 をビルドします。</p></div>
-<div class="paragraph"><p>執筆中&#8230;</p></div>
+<div class="paragraph"><p><code>mkdir z_tools/guigui00</code> としてその中に
+<code>28GO_K_0033</code> の <code>go_lib/go_lib.h</code> <code>guigui00.h</code> <code>include/stddef.h</code> <code>guigui00/stdlib.h</code> を複製します。
+<code>z_tools/guigui00/stdlib.h</code> に次のパッチ <a href="osask2020_stdlib.diff">osask2020_stdlib.diff</a> を当てます。</p></div>
+<div class="paragraph"><p><code>28GO_K_0033/gg00libc/</code> に次のパッチ <a href="osask2020_gg00libc.diff">osask2020_gg00libc.diff</a> を当てます。
+<code>pushd 28GO_K_0033/gg00libc/</code> のと <code>make</code> すると <code>28GO_K_0033/gg00libc/gg00libc.lib</code> が生成されます。
+ <code>28GO_K_0033/gg00libc/gg00libc.lib</code> を <code>z_tools/gg00libc/gg00libc.lib</code> にコピーします。
+執筆中&#8230;</p></div>
+<div class="paragraph"><p><code>go_lib/GO_lib.h</code> に <code>include/go_lib.h</code> からシムリンクを貼ります。</p></div>
+<div class="paragraph"><p><code>make golibc</code> をビルドして</p></div>
 </div>
 </div>
 <div class="sect1">
@@ -858,7 +866,7 @@ clang 9.0.1
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2020-04-09 19:22:14 JST
+ 2020-04-09 20:14:46 JST
 </div>
 </div>
 </body>
