@@ -1,0 +1,34 @@
+diff --color -r -u gg00libc_old/Makefile gg00libc/Makefile
+--- gg00libc_old/Makefile	2010-01-30 03:24:57.000000000 +0900
++++ gg00libc/Makefile	2020-03-12 02:14:09.059630096 +0900
+@@ -1,4 +1,6 @@
++TOOLPATH=../z_tools/
+ include ../z_tools/command.txt
++NASKCNV  = $(TOOLPATH)naskcnv0 -l -s -w
+ 
+ TARGET     = gg00libc
+ STACKSIZE  =
+@@ -41,7 +43,7 @@
+ 	$(ASKA) $*.ias $*.3as
+ 
+ %.nas : %.3as Makefile
+-	$(NASKCNV) in:$*.3as out:$*.nas
++	$(NASKCNV) $*.3as $*.nas
+ 
+ %.lst : %.nas Makefile
+ 	$(NASK) $*.nas $*.obj $*.lst
+@@ -54,10 +56,13 @@
+ 	$(BIM2BIN) in:$*.org out:$*.bin -osacmp -tek0
+ 
+ $(TARGET).lib : $(OBJS) Makefile
+-	$(GOLIB) out=$@ $(OBJS)
++	#$(GOLIB) out:$@ $(patsubst %,ext:%,$(OBJS))
++	$(GOLIB) out:$@ $(OBJS)
+ 
+ clean :
+ 	$(DELE) *.obj
+ 	$(DELE) $(TARGET).bim
+ 	$(DELE) $(TARGET).map
+ 	$(DELE) $(TARGET).org
++
++.PRECIOUS: %.nas %.3as %.lst %.ias

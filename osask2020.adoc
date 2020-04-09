@@ -30,7 +30,28 @@ include::osask2020_Asuka.diff[]
 GO footnote:[GO言語ではなく、gcc から派生したC言語のコンパイラ。]
 をビルドします。
 
+`mkdir z_tools/guigui00` としてその中に
+`28GO_K_0033` の `go_lib/go_lib.h` `guigui00.h` `include/stddef.h` `guigui00/stdlib.h` を複製します。
+`z_tools/guigui00/stdlib.h` に次のパッチ link:osask2020_stdlib.diff[osask2020_stdlib.diff] を当てます。
+
+
+`28GO_K_0033/gg00libc/` に次のパッチ link:osask2020_gg00libc.diff[osask2020_gg00libc.diff] を当てます。
+`pushd 28GO_K_0033/gg00libc/` のと `make` すると `28GO_K_0033/gg00libc/gg00libc.lib` が生成されます。
+ `28GO_K_0033/gg00libc/gg00libc.lib` を `z_tools/gg00libc/gg00libc.lib` にコピーします。
 執筆中...
+
+
+`go_lib/GO_lib.h` に `include/go_lib.h` からシムリンクを貼ります。
+
+////
+`go_lib/` に次のパッチ link:osask2020_go_lib.diff[osask2020_go_lib.diff] を当てます。
+////
+////
+`make go_lib/` でビルドします。
+不要？
+////
+
+`make golibc` をビルドして
 
 == Step 4: osalink をビルド ==
 

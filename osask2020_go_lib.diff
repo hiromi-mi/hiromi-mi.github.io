@@ -1,0 +1,31 @@
+diff --color -r -u go_lib_old/Makefile go_lib/Makefile
+--- go_lib_old/Makefile	2020-04-09 19:57:38.932998843 +0900
++++ go_lib/Makefile	2010-01-16 11:26:47.000000000 +0900
+@@ -18,8 +18,8 @@
+ 	$(MAKER) $(TARGETLIB) stdin.o
+ 
+ clean :
+-	-$(DELE) *.o
+-	-$(DELE) $(TARGETLIB)
++	-$(DEL) *.o
++	-$(DEL) $(TARGETLIB)
+ 
+ $(TARGETLIB) : $(OBJS) Makefile ../include/rules.mak
+-	$(GOLIB) out=$@ $(OBJS)
++	$(LIBRARIAN) out:$@ $(OBJS)
+go_lib_new のみに存在: dummy.o
+go_lib_new のみに存在: fclose.o
+go_lib_new のみに存在: fgetc.o
+go_lib_new のみに存在: fopen.o
+go_lib_new のみに存在: go_lib.lib
+diff --color -r -u go_lib_old/malloc.c go_lib/malloc.c
+--- go_lib_old/malloc.c	2010-01-08 11:08:44.000000000 +0900
++++ go_lib/malloc.c	2020-03-12 01:13:11.448264971 +0900
+@@ -1,6 +1,6 @@
+ /* copyright(C) 2002 H.Kawai (under KL-01). */
+ 
+-#include "GO_lib.h"
++#include "go_lib.h"
+ 
+ struct GOL_STR_MEMMAN GOL_memman;
+ 
