@@ -739,10 +739,23 @@ asciidoc.install();
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>手元環境は以下の通りです。
-- Arch Linux
-- gcc 9.3.0
-- clang 9.0.1</p></div>
+<div class="ulist"><div class="title">手元環境は以下の通りです。</div><ul>
+<li>
+<p>
+Arch Linux
+</p>
+</li>
+<li>
+<p>
+gcc 9.3.0
+</p>
+</li>
+<li>
+<p>
+clang 9.0.1
+</p>
+</li>
+</ul></div>
 </div>
 </div>
 <div class="sect1">
@@ -758,162 +771,6 @@ asciidoc.install();
 <code>Asuka_src_1.1.tar.gz</code> <span class="footnote"><br />[派生版は原則名称を変更することになっており、これは hideyosi さんによる ASKA の派生物です。]<br /></span> をダウンロードします。
 伸張すると <code>Asuka_src_1.1/</code> なるディレクトリが生成されているはずです。</p></div>
 <div class="paragraph"><p>そして次のパッチ <a href="osask2020_Asuka.diff">osask2020_Asuka.diff</a> を <code>patch -p0 &lt; osask2020_Asuka.diff</code> として当てます。このパッチでは <code>strcmp()</code> などの関数を明示的に宣言した上で <code>Makefile</code> を書き換えます。(この差分は KL-01 に従います。)</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt>Asuka_src_1.1 のみに存在: Asuka
-diff --color -u Asuka_src_1.1_old/Makefile Asuka_src_1.1/Makefile
-<span style="color: #FF6600">--- Asuka_src_1.1_old/Makefile  2010-01-30 03:32:20.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/Makefile      2020-03-12 10:24:52.656154565 +0900</span>
-<span style="color: #0000FF">@@ -5,13 +5,13 @@</span>
- O = o
- A = a
- C = c
-<span style="color: #FF6600">-CPP = cpp</span>
-<span style="color: #FF6600">-CC = g++</span>
-<span style="color: #FF6600">-LD = g++</span>
-<span style="color: #FF6600">-GC = gcc</span>
-<span style="color: #FF6600">-CFLAGS = -O2 -I.</span>
-<span style="color: #FF6600">-CPPFLAGS =</span>
-<span style="color: #FF6600">-PGNAME = Asuka.exe</span>
-<span style="color: #009900">+CPP = clang++</span>
-<span style="color: #009900">+CC = clang++</span>
-<span style="color: #009900">+LD = clang++</span>
-<span style="color: #009900">+GC = clang</span>
-<span style="color: #009900">+CFLAGS = -I. -g</span>
-<span style="color: #009900">+CPPFLAGS = -DLINUX</span>
-<span style="color: #009900">+PGNAME = aska</span>
-
- #
- # SRC Directory
-Asuka_src_1.1 のみに存在: aska
-diff --color -u Asuka_src_1.1_old/filepath.h Asuka_src_1.1/filepath.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/filepath.h        2003-09-13 02:27:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/filepath.h    2020-03-11 23:23:46.460537970 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
-
- #include &lt;string&gt;
- #include &lt;list&gt;
-Asuka_src_1.1 のみに存在: filepath.o
-diff --color -u Asuka_src_1.1_old/generator.h Asuka_src_1.1/generator.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/generator.h       2003-09-13 02:28:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/generator.h   2020-03-11 23:24:28.960717476 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,9 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
-<span style="color: #009900">+#include &lt;cstring&gt;</span>
- #include &lt;iostream&gt;
-
- #include &lt;string&gt;
-Asuka_src_1.1 のみに存在: generator.o
-Asuka_src_1.1 のみに存在: main.o
-diff --color -u Asuka_src_1.1_old/module.h Asuka_src_1.1/module.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/module.h  2010-01-10 21:41:08.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/module.h      2020-03-11 23:24:12.870649520 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
- #ifndef LINUX
- #include &lt;io.h&gt;
- #endif
-Asuka_src_1.1 のみに存在: module.o
-diff --color -u Asuka_src_1.1_old/parser.h Asuka_src_1.1/parser.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/parser.h  2003-09-13 02:30:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/parser.h      2020-03-11 23:23:49.550551019 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
- #include &lt;iostream&gt;
-
- #include &lt;string&gt;
-Asuka_src_1.1 のみに存在: parser.o
-diff --color -u Asuka_src_1.1_old/scanner.h Asuka_src_1.1/scanner.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/scanner.h 2003-09-13 02:31:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/scanner.h     2020-03-11 23:26:43.171284308 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,9 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstring&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
- #include &lt;iostream&gt;
-
- #include &lt;string&gt;
-Asuka_src_1.1 のみに存在: scanner.o
-diff --color -u Asuka_src_1.1_old/stringx.h Asuka_src_1.1/stringx.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/stringx.h 2003-09-13 02:31:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/stringx.h     2020-03-11 23:23:51.060557399 +0900</span>
-<span style="color: #0000FF">@@ -6,9 +6,9 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;ctype.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
-<span style="color: #009900">+#include &lt;cctype&gt;</span>
- #include &lt;string&gt;
- #include &lt;list&gt;
- #include &lt;map&gt;
-Asuka_src_1.1 のみに存在: stringx.o
-diff --color -u Asuka_src_1.1_old/table.h Asuka_src_1.1/table.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/table.h   2003-09-13 02:31:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/table.h       2020-03-11 23:23:51.740560270 +0900</span>
-<span style="color: #0000FF">@@ -6,8 +6,8 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
- #include &lt;iostream&gt;
- #include &lt;string&gt;
- #include &lt;list&gt;
-Asuka_src_1.1 のみに存在: table.o
-diff --color -u Asuka_src_1.1_old/textmodule.h Asuka_src_1.1/textmodule.h
-<span style="color: #FF6600">--- Asuka_src_1.1_old/textmodule.h      2003-09-13 02:32:00.000000000 +0900</span>
-<span style="color: #009900">+++ Asuka_src_1.1/textmodule.h  2020-03-11 23:23:52.330562760 +0900</span>
-<span style="color: #0000FF">@@ -7,8 +7,8 @@</span>
-
- #pragma warning(disable:4786)
-
-<span style="color: #FF6600">-#include &lt;stdio.h&gt;</span>
-<span style="color: #FF6600">-#include &lt;stdlib.h&gt;</span>
-<span style="color: #009900">+#include &lt;cstdio&gt;</span>
-<span style="color: #009900">+#include &lt;cstdlib&gt;</span>
-
- #include &lt;string&gt;
- #include &lt;list&gt;
-Asuka_src_1.1 のみに存在: textmodule.o</tt></pre></div></div>
 <div class="paragraph"><p><code>make</code> コマンドでビルドすると、 <code>aska</code> が生成されているはずです。
 生成物は <code>z_tools/aska</code> としてコピーします。</p></div>
 </div>
@@ -939,236 +796,30 @@ Asuka_src_1.1 のみに存在: textmodule.o</tt></pre></div></div>
 <div class="sectionbody">
 <div class="paragraph"><p>そして次のパッチ
 <a href="osask2020_osask.diff">osask2020_osask.diff</a> を当てます。Makefile 変更や不必要な定義の削除があります。(KL-01 に従います。)</p></div>
-<div class="listingblock">
-<div class="content"><!-- Generator: GNU source-highlight
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><tt><span style="color: #FF6600">--- 4.7_old/make_com_linux.txt  2020-04-09 18:50:22.292940385 +0900</span>
-<span style="color: #009900">+++ 4.7/make_com_linux.txt      2020-04-09 18:41:09.632932381 +0900</span>
-<span style="color: #0000FF">@@ -0,0 +1,20 @@</span>
-<span style="color: #009900">+# Makefile�̃C���N���[�h�t�@�C��</span>
-<span style="color: #009900">+# �S�@�틤��</span>
-<span style="color: #009900">+</span>
-<span style="color: #009900">+MAKE     = $(TOOLPATH)make -r</span>
-<span style="color: #009900">+SJISCONV = $(TOOLPATH)sjisconv -s</span>
-<span style="color: #009900">+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os</span>
-<span style="color: #009900">+GAS2NASK = $(TOOLPATH)gas2nask -a</span>
-<span style="color: #009900">+NASK     = $(TOOLPATH)nask</span>
-<span style="color: #009900">+OBJ2BIM  = $(TOOLPATH)obj2bim</span>
-<span style="color: #009900">+BIM2BIN  = $(TOOLPATH)bim2bin</span>
-<span style="color: #009900">+CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)</span>
-<span style="color: #009900">+ASKA     = $(TOOLPATH)aska</span>
-<span style="color: #009900">+NASKCNV  = $(TOOLPATH)naskcnv0 -l -s</span>
-<span style="color: #009900">+GOLIB    = $(TOOLPATH)golib00</span>
-<span style="color: #009900">+OSALINK  = $(TOOLPATH)osalink1</span>
-<span style="color: #009900">+EDIMG    = $(TOOLPATH)edimg</span>
-<span style="color: #009900">+DELE     = rm -f</span>
-<span style="color: #009900">+COPY     = cp</span>
-<span style="color: #009900">+</span>
-<span style="color: #009900">+TXT2BIN  = $(TOOLPATH)txt2bin</span>
-diff --color -r -u 4.7_old/Makefile 4.7/Makefile
-<span style="color: #FF6600">--- 4.7_old/Makefile    2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/Makefile        2020-03-12 02:38:46.985872134 +0900</span>
-<span style="color: #0000FF">@@ -3,7 +3,7 @@</span>
-
- TOOLPATH = ../z_tools/
-
-<span style="color: #FF6600">-include make_com.txt</span>
-<span style="color: #009900">+include make_com_linux.txt</span>
-
- ALL :
- # �f�t�H���g����F�e���D���Ȃ悤�ɃJ�X�^�}�C�Y����΂���
-<span style="color: #0000FF">@@ -16,7 +16,7 @@</span>
-
- at :
-        $(MAKE) -C pcat
-<span style="color: #FF6600">-       $(COPY) pcat\OSASK.EXE OSASK_AT.EXE</span>
-<span style="color: #009900">+       $(COPY) pcat/osask.exe OSASK_AT.EXE</span>
-        $(EDIMG) binin:OSASK_AT.EXE exe2bin seg:2048 binout:OSASK_AT.SYS
-
- tw :
-<span style="color: #0000FF">@@ -31,14 +31,14 @@</span>
-
- qe :
-        $(MAKE) -C qemu
-<span style="color: #FF6600">-       $(COPY) qemu\OSASK.EXE OSASK_QE.EXE</span>
-<span style="color: #009900">+       $(COPY) qemu/osask.exe OSASK_QE.EXE</span>
-        $(EDIMG) binin:OSASK_QE.EXE exe2bin seg:2048 binout:OSASK_QE.SYS
-
-<span style="color: #FF6600">-run : Makefile qemu/edimgopt.txt $(TOOLPATH)osa_qemu/OSAIMGAT.BIN</span>
-<span style="color: #009900">+run : Makefile qemu/edimgopt.txt img_at</span>
-        $(MAKE) qe
-<span style="color: #FF6600">-       $(EDIMG) imgin:$(TOOLPATH)osa_qemu/OSAIMGAT.BIN @qemu/edimgopt.txt \</span>
-<span style="color: #009900">+       $(EDIMG) imgin:OSAIMGAT.BIN @qemu/edimgopt.txt \</span>
-                imgout:qemu/OSAIMGQE.BIN imgout:$(TOOLPATH)qemu/FDIMAGE0.BIN
-<span style="color: #FF6600">-       $(MAKE) -C $(TOOLPATH)qemu</span>
-<span style="color: #009900">+       # $(MAKE) -C $(TOOLPATH)qemu</span>
-
- bo :
-        $(MAKE) -C bochs
-diff --color -r -u 4.7_old/make_com_linux.txt 4.7/make_com_linux.txt
-<span style="color: #FF6600">--- 4.7_old/make_com_linux.txt  2020-04-09 18:50:22.292940385 +0900</span>
-<span style="color: #009900">+++ 4.7/make_com_linux.txt      2020-04-09 18:41:09.632932381 +0900</span>
-<span style="color: #0000FF">@@ -0,0 +1,20 @@</span>
-<span style="color: #009900">+# Makefile�̃C���N���[�h�t�@�C��</span>
-<span style="color: #009900">+# �S�@�틤��</span>
-<span style="color: #009900">+</span>
-<span style="color: #009900">+MAKE     = $(TOOLPATH)make -r</span>
-<span style="color: #009900">+SJISCONV = $(TOOLPATH)sjisconv -s</span>
-<span style="color: #009900">+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Wall -Os</span>
-<span style="color: #009900">+GAS2NASK = $(TOOLPATH)gas2nask -a</span>
-<span style="color: #009900">+NASK     = $(TOOLPATH)nask</span>
-<span style="color: #009900">+OBJ2BIM  = $(TOOLPATH)obj2bim</span>
-<span style="color: #009900">+BIM2BIN  = $(TOOLPATH)bim2bin</span>
-<span style="color: #009900">+CPP0     = $(TOOLPATH)gocpp0 -P -I$(INCPATH)</span>
-<span style="color: #009900">+ASKA     = $(TOOLPATH)aska</span>
-<span style="color: #009900">+NASKCNV  = $(TOOLPATH)naskcnv0 -l -s</span>
-<span style="color: #009900">+GOLIB    = $(TOOLPATH)golib00</span>
-<span style="color: #009900">+OSALINK  = $(TOOLPATH)osalink1</span>
-<span style="color: #009900">+EDIMG    = $(TOOLPATH)edimg</span>
-<span style="color: #009900">+DELE     = rm -f</span>
-<span style="color: #009900">+COPY     = cp</span>
-<span style="color: #009900">+</span>
-<span style="color: #009900">+TXT2BIN  = $(TOOLPATH)txt2bin</span>
-diff --color -r -u 4.7_old/make_inc.txt 4.7/make_inc.txt
-<span style="color: #FF6600">--- 4.7_old/make_inc.txt        2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/make_inc.txt    2020-03-12 02:52:50.287393362 +0900</span>
-<span style="color: #0000FF">@@ -2,9 +2,9 @@</span>
- # �e��ݒ�p
-
- # �E�B���h�E�f�U�C��
-<span style="color: #FF6600">-DESIGN = WIN9X</span>
- # DESIGN = WIN9X
-<span style="color: #FF6600">-# DESIGN = TMENU</span>
-<span style="color: #009900">+# DESIGN = WIN9X</span>
-<span style="color: #009900">+DESIGN = TMENU</span>
- # DESIGN = WIN31
- # DESIGN = CHO_OSASK
- # DESIGN = NEWSTYLE
-diff --color -r -u 4.7_old/make_pk0.txt 4.7/make_pk0.txt
-<span style="color: #FF6600">--- 4.7_old/make_pk0.txt        2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/make_pk0.txt    2020-03-12 02:16:47.110297643 +0900</span>
-<span style="color: #0000FF">@@ -1,8 +1,11 @@</span>
- # linker options for pokon0
-
-<span style="color: #FF6600">-STK_PK_AT = 1m</span>
-<span style="color: #FF6600">-STK_PK_TW = 1m</span>
-<span style="color: #FF6600">-STK_PK_NE = 1m</span>
-<span style="color: #009900">+#STK_PK_AT = 1m</span>
-<span style="color: #009900">+#STK_PK_TW = 1m</span>
-<span style="color: #009900">+#STK_PK_NE = 1m</span>
-<span style="color: #009900">+STK_PK_AT = 16k</span>
-<span style="color: #009900">+STK_PK_TW = 16k</span>
-<span style="color: #009900">+STK_PK_NE = 16k</span>
-
- MLC_PK_AT = 90k
- MLC_PK_TW = 90k
-diff --color -r -u 4.7_old/pcat/Makefile 4.7/pcat/Makefile
-<span style="color: #FF6600">--- 4.7_old/pcat/Makefile       2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/pcat/Makefile   2020-03-12 01:00:18.084998684 +0900</span>
-<span style="color: #0000FF">@@ -6,13 +6,13 @@</span>
- VPATH = ..
-
- include ../make_inc.txt
-<span style="color: #FF6600">-include ../make_com.txt</span>
-<span style="color: #009900">+include ../make_com_linux.txt</span>
- include ../make_wm0.txt
- include ../make_pk0.txt
-
- DEFINES = $(DEFINES_AT) -DPCAT -D$(DESIGN)
-
-<span style="color: #FF6600">-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
-<span style="color: #009900">+MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
-
- ALL :
-        $(MAKE) OSASK.EXE
-diff --color -r -u 4.7_old/pokon0.c 4.7/pokon0.c
-<span style="color: #FF6600">--- 4.7_old/pokon0.c    2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/pokon0.c        2020-03-12 02:26:51.892851963 +0900</span>
-<span style="color: #0000FF">@@ -97,7 +97,7 @@</span>
-        { "SH1", "SHIBAI1 BIN" }
- };
-
-<span style="color: #FF6600">-typedef unsigned char UCHAR;</span>
-<span style="color: #009900">+//typedef unsigned char UCHAR;</span>
-
- struct STR_BANK *banklist;
- struct SGG_FILELIST *file;
-diff --color -r -u 4.7_old/qemu/Makefile 4.7/qemu/Makefile
-<span style="color: #FF6600">--- 4.7_old/qemu/Makefile       2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/qemu/Makefile   2020-03-12 02:36:48.895373377 +0900</span>
-<span style="color: #0000FF">@@ -5,16 +5,16 @@</span>
- INCPATH  = ../../z_tools/guigui00/
-
- include ../make_inc.txt
-<span style="color: #FF6600">-include ../make_com.txt</span>
-<span style="color: #009900">+include ../make_com_linux.txt</span>
-
-<span style="color: #FF6600">-MKFL = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
-<span style="color: #009900">+MKFL = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
-
- ALL :
-        $(MAKE) OSASK.EXE
-
- OSASK.EXE : $(MKFL) osalink1.opt timerdrv.tek
-        $(MAKE) -C .. at
-<span style="color: #FF6600">-       $(COPY) ..\osask_at.exe osask_at.exe</span>
-<span style="color: #009900">+       $(COPY) ../OSASK_AT.EXE osask_at.exe</span>
-        $(OSALINK)
-        $(DELE) osask_at.exe
-
-diff --color -r -u 4.7_old/sgg00lib/Makefile 4.7/sgg00lib/Makefile
-<span style="color: #FF6600">--- 4.7_old/sgg00lib/Makefile   2009-12-11 05:38:13.000000000 +0900</span>
-<span style="color: #009900">+++ 4.7/sgg00lib/Makefile       2020-03-11 23:58:23.409309915 +0900</span>
-<span style="color: #0000FF">@@ -5,13 +5,13 @@</span>
- INCPATH  = ../../z_tools/guigui00/
-
- include ../make_inc.txt
-<span style="color: #FF6600">-include ../make_com.txt</span>
-<span style="color: #009900">+include ../make_com_linux.txt</span>
-
- DEFINES += -DPCAT -D$(DESIGN)
-
- TARGET = sgg00lib.lib
- OBJS   = execcmd.obj execcmd0.obj execcmd1.obj fwinman.obj fpokon.obj fdebug.obj
-<span style="color: #FF6600">-MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com.txt</span>
-<span style="color: #009900">+MKFL   = Makefile ../Makefile ../make_inc.txt ../make_com_linux.txt</span>
-
- ALL :
-        $(MAKE) sgg00lib.lib</tt></pre></div></div>
 <div class="paragraph"><p><code>make</code> でビルドします。</p></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_step_6_osask_の実行">Step 6: OSASK の実行</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>執筆中&#8230;
-<code>qemu-system-i386 -fda 4.7/OSAIMGAT.BIN</code> にて実行できます。</p></div>
-<div class="imageblock">
-<div class="content">
-<img src="osask2020_1.png" alt="OSASK を TOWNS 風にて起動させたところ" />
-</div>
-<div class="title">Figure 1. TOWNS 風モードにしたところ</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="osask2020_2.png" alt="OSASK を win31 風にて起動させたところ" />
-</div>
-<div class="title">Figure 2. Windows 3.1 風モードにしたところ</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="osask2020_3.png" alt="OSASK を NEWSTYLE 風にて起動させたところ" />
-</div>
-<div class="title">Figure 3. NEWSTYLE  風モードにしたところ</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="osask2020_4.png" alt="OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ" />
-</div>
-<div class="title">Figure 4. 超漢字風モードにしたところ</div>
-</div>
+<div class="paragraph"><p><code>qemu-system-i386 -fda 4.7/OSAIMGAT.BIN</code> にて実行できます。</p></div>
+<div class="paragraph"><p><code>4.7/make_inc.txt</code> の <code>DESIGN</code> や <code>FONTSRC</code> を書き換えて見た目の違うOSASK をビルドできます。
+.TOWNS 風モードにしたところ
+<span class="image">
+<img src=":osask2020_1.png" alt="OSASK を TOWNS 風にて起動させたところ" />
+</span>
+.Windows 3.1 風モードにしたところ
+<span class="image">
+<img src=":osask2020_2.png" alt="OSASK を win31 風にて起動させたところ" />
+</span>
+.NEWSTYLE  風モードにしたところ
+<span class="image">
+<img src=":osask2020_3.png" alt="OSASK を NEWSTYLE 風にて起動させたところ" />
+</span>
+.超漢字風モードにしたところ
+<span class="image">
+<img src=":osask2020_4.png" alt="OSASK を CHO_OSASK 風(超漢字？)にて起動させたところ" />
+</span></p></div>
 </div>
 </div>
 <div class="sect1">
@@ -1193,7 +844,7 @@ diff --color -r -u 4.7_old/sgg00lib/Makefile 4.7/sgg00lib/Makefile
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2020-04-09 19:11:54 JST
+ 2020-04-09 19:15:10 JST
 </div>
 </div>
 </body>
