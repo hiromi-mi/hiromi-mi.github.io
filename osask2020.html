@@ -600,96 +600,8 @@ Your browser does not support the video tag.
 </div>
 </div>
 <div class="paragraph">
-<p>次に、edimg でアプリを書込みます。 <code>apps.txt</code> に次の設定をします。</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>opt imgin:fdimg0at.tek bias:9
-wbinimg src:osaskbs1.bin len:512 from:0 to:0
-create file:@:osask.sys size:108k begin:5
-ovrcopy from:OSASK_AT.SYS to:@:OSASK.SYS
-setattr file:@:OSASK.SYS attr:0x06
-copy from:./apps/!GUIDE!.TXT to:@:
-copy from:./apps/!GUIDE2!.TXT to:@:
-copy from:./apps/BBALL3.BIN to:@:
-copy from:./apps/BEDITC00.BIN to:@:
-copy from:./apps/BTNTEST.BIN to:@:
-copy from:./apps/CALM21.BIN to:@:
-copy from:./apps/CANVAS.BIN to:@:
-copy from:./apps/CNTDWN3.BIN to:@:
-copy from:./apps/CVTG03.BIN to:@:
-copy from:./apps/DAIGO.MML to:@:
-copy from:./apps/DAIKU.MML to:@:
-copy from:./apps/DEKIRU.BIN to:@:
-copy from:./apps/FUJI.JPG to:@:
-copy from:./apps/FUJI.MML to:@:
-copy from:./apps/GUITEST.WRP to:@:
-copy from:./apps/GYOTAK2.5TQ to:@:
-copy from:./apps/GYOTAK2.BIN to:@:
-copy from:./apps/HELO.BIN to:@:
-copy from:./apps/ICALC1.BIN to:@:
-copy from:./apps/INVADER5.BIN to:@:
-copy from:./apps/JKTEXT01.TXT to:@:
-copy from:./apps/JKTEXT02.TXT to:@:
-copy from:./apps/JKTEXT03.TXT to:@:
-copy from:./apps/JPN16V00.FNT to:@:
-copy from:./apps/KANJIMAP.TXT to:@:
-copy from:./apps/KAODUN01.BIN to:@:
-copy from:./apps/KAOS2C.HEL to:@:
-copy from:./apps/KAOSC.HEL to:@:
-copy from:./apps/KATAKK.BIN to:@:
-copy from:./apps/KCUBE02.BIN to:@:
-copy from:./apps/KMANDEL5.BIN to:@:
-copy from:./apps/KTETRAC1.BIN to:@:
-copy from:./apps/LALALU.MML to:@:
-copy from:./apps/LOADFAC2.BIN to:@:
-copy from:./apps/MCOPYC1.BIN to:@:
-copy from:./apps/MMLPLAY.BIN to:@:
-copy from:./apps/MOSKEY.BIN to:@:
-copy from:./apps/MSGK01C.BIN to:@:
-copy from:./apps/MSWP08.BIN to:@:
-copy from:./apps/MT_XOR1.BIN to:@:
-copy from:./apps/ONKAN.BIN to:@:
-copy from:./apps/OSAGAME.BIN to:@:
-copy from:./apps/OSASK.BMP to:@:
-copy from:./apps/OYAJI.BIN to:@:
-copy from:./apps/PICTURE0.BIN to:@:
-copy from:./apps/READMEJP.TXT to:@:
-copy from:./apps/RESIZER0.BIN to:@:
-copy from:./apps/REVERS03.BIN to:@:
-copy from:./apps/ROSE.BMP to:@:
-copy from:./apps/RROSE.BIN to:@:
-copy from:./apps/SAMPLEJP.TXT to:@:
-copy from:./apps/SAMPLEKR.TXT to:@:
-copy from:./apps/SCRIBBLE.WRP to:@:
-copy from:./apps/SOL.BIN to:@:
-copy from:./apps/SV.BIN to:@:
-copy from:./apps/S_WORLD.BIN to:@:
-copy from:./apps/TEDITC02.BIN to:@:
-copy from:./apps/TEDITC02.INI to:@:
-copy from:./apps/TEST043A.BIN to:@:
-copy from:./apps/TEST128.BMP to:@:
-copy from:./apps/TE_DICT0.BIN to:@:
-copy from:./apps/TE_DICT0.TXT to:@:
-copy from:./apps/TE_DICV0.BIN to:@:
-copy from:./apps/V-640--8.PSF to:@:
-copy from:./apps/V-640-16.PSF to:@:
-copy from:./apps/V-640-32.PSF to:@:
-copy from:./apps/V-800--8.PSF to:@:
-copy from:./apps/V-800-16.PSF to:@:
-copy from:./apps/V-800-32.PSF to:@:
-copy from:./apps/V1024--8.PSF to:@:
-copy from:./apps/V1024-16.PSF to:@:
-copy from:./apps/V1024-32.PSF to:@:
-copy from:./apps/V1280--8.PSF to:@:
-copy from:./apps/V1280-16.PSF to:@:
-copy from:./apps/V1280-32.PSF to:@:
-copy from:./apps/VIDEOMOD.TXT to:@:
-copy from:./apps/WABA.BIN to:@:
-copy from:./apps/WATCH.WRP to:@:
-copy from:./apps/OSASK0.PSF to:@:
-opt imgout:OSAAPPS.BIN</pre>
-</div>
+<p>次に、edimg でアプリを書込みます。 <code>apps.txt</code> に次の <a href="osask2020_apps.txt">apps.txt</a> を書きます。
+これは edimg のコマンドを羅列したものになります。</p>
 </div>
 <div class="paragraph">
 <p>と edimg スクリプトを書き</p>
@@ -778,7 +690,7 @@ opt imgout:OSAAPPS.BIN</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-10 00:21:09 +0900
+Last updated 2020-04-19 17:16:55 +0900
 </div>
 </div>
 </body>

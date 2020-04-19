@@ -113,11 +113,14 @@ http://hrb.osask.jp/wiki/?tools%2Fedimg[edimg] を使うとできます。
 $ ../z_tools/edimg imgin:./osat47i/OSAIMGAT.BIN copyall from:@: to:./4.7/apps/```
 ....
 
-次に、edimg でアプリを書込みます。 `apps.txt` に次の設定をします。
+次に、edimg でアプリを書込みます。 `apps.txt` に次の link:osask2020_apps.txt[apps.txt] を書きます。
+これは edimg のコマンドを羅列したものになります。
 
+////
 ....
 include::osask2020_apps.txt[]
 ....
+////
 
 と edimg スクリプトを書き
 ....
