@@ -55,4 +55,8 @@ https://archive.fosdem.org/2013/schedule/event/waylandinput/
 
 また、各ディストリビューションのメンテナの方の文章や Sway/ibus/fcitx/wayland の reddit や GitHub Issueを検索すると情報が掴めます.
 
-私の関心からは外れますが、IM 自体の開発に関して最後に挙げておきます. 日本語入力を支える技術、libkkc (n-gram 利用、libkkc-data 参照)などの既存実装を確認するのが一手かと思います. あるいは SKK なら eskk.vim や ddskk などが考えられます. 辞書まわりなら mozc-ut (多くのサイトからはgeocities のリンクが貼られています、移行先は: http://linuxplayers.g1.xrea.com/mozc-ut.html ) です.
+私の関心からは外れますが、IM 自体の開発に関して最後に挙げておきます.
+- 徳永拓之 日本語入力を支える技術―変わり続けるコンピュータと言葉の世界, 技術評論社, 2012. https://gihyo.jp/book/2012/978-4-7741-4993-6
+あるいは既存実装については libkkc (n-gram 利用、libkkc-data 参照)などが考えられます.
+SKK については多くの既存実装がありますが,  eskk.vim や ddskk などが考えられます.
+辞書まわりでしたら mozc-ut (多くのサイトからはgeocities のリンクが貼られています、移行先は: http://linuxplayers.g1.xrea.com/mozc-ut.html です) などもありうるでしょうか.
