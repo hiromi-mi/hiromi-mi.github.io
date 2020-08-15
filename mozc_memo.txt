@@ -1,0 +1,58 @@
+# mozc を中心とした Linux 環境での Input Method 事情のメモ
+Author: hiromi-mi
+連絡先: @hiromi_mi@mblg.hiromi-mi.jp / https://hiromi-mi.github.io/
+ライセンス: CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+更新履歴:
+2020.8.16 初稿
+
+2020.8.16 時点では https://hiromi-mi.github.io/mozc_memo.txt に置いてありますが、予告なくこのURL は変更されることがあります.
+
+# mozc の現状
+1. Google は mozc への Pull Request を当面受け入れない方針のようです.
+- https://github.com/google/mozc/blob/master/PULL_REQUEST_TEMPLATE.md
+
+2. fcitx が fork したブランチを2018年ごろまでメンテナンスされていたようですが、それも翻訳を除きPull Request 更新が途絶えています.
+- https://github.com/fcitx/mozc/pulls
+
+3. 現状非公式パッチを当てないとコンパイルできない模様です. 把握している限りでは
+* Python3 に未対応
+- https://github.com/google/mozc/issues/462
+- https://bugs.archlinux.org/task/65124
+* Protocol buffers との整合性 
+https://github.com/google/mozc/issues/460
+* gcc8 対応
+- https://github.com/google/mozc/issues/
+
+4. 非公式パッチを探すときはディストリビューション側を確認するのが早いと思います:
+* Gentoo: https://gitweb.gentoo.org/repo/gentoo.git/tree/app-i18n/mozc/files
+* Ubuntu: https://git.launchpad.net/ubuntu/+source/mozc/log/?h=applied/ubuntu/groovy-proposed
+* Arch Linux: mozc、ibus-mozc、fcitx-mozc など
+
+# Wayland 対応の現状
+mozc-server が gtk2 なのでWayland 上で動作しないと思われます. また詳細は追えていませんが[2] によると 「単語の意味」を変換候補一覧の隣に表示する機能を実装するためにibus標準での変換候補表示機構をad-hoc に拡張しており Wayland native (not XWayland)では (ibus、fcitx などの IM Framework によらず) 動作しない部分があります.
+
+また、たとえ mozc 側が動いてもIM Framework側についても次のような事情があります.
+ibus では Wayland IM protocol v2 が実装されておらず Sway と噛み合わないなどがあります. https://github.com/ibus/ibus/issues/2182 
+fcitx については [3] によると fcitx4は未対応、2017開発中のfcitx5 でもいくつか課題が残っているようです.
+
+# 参考資料
+最近の状況については:
+[1] Cross Distribution Developers Camp 日本語入力の危機を乗り越えるインプットメソッド・フレームワークとかな漢字変換に訪れている課題とその対策 ODC2019 Tokyo https://www.ospn.jp/odc2019/pdf/ODC2019_cddc.pdf
+同じく最近の状況、とくに IM Framework 間の比較などは: 
+[2] What is necessary for the next input method framework 
+https://events.opensuse.org/conferences/summitasia18/program/proposals/2056
+fcitx まわりについては:
+[3] Gaps between Wayland and Fcitx (or all Input methods).
+https://www.csslayer.info/wordpress/fcitx-dev/gaps-between-wayland-and-fcitx-or-all-input-methods/
+
+Wayland Protocol についてはfreedesktop.org の 公式ドキュメントもありますが、Sway の作者が執筆中のWayland Book が詳しいです
+[4] The Wayland Protocol https://wayland-book.com/
+また IM Framework の(2013年なので古いものの) 概要は FOSDEM 2013 での講演: 
+[5] Wayland Input Methods
+https://archive.fosdem.org/2013/schedule/event/waylandinput/
+なども参考になるでしょうか.
+
+また、各ディストリビューションのメンテナの方の文章や Sway/ibus/fcitx/wayland の reddit や GitHub Issueを検索すると情報が掴めます.
+
+私の関心からは外れますが、IM 自体の開発に関して最後に挙げておきます. 日本語入力を支える技術、libkkc (n-gram 利用、libkkc-data 参照)などの既存実装を確認するのが一手かと思います. あるいは SKK なら eskk.vim や ddskk などが考えられます. 辞書まわりなら mozc-ut (多くのサイトからはgeocities のリンクが貼られています、移行先は: http://linuxplayers.g1.xrea.com/mozc-ut.html ) です.
