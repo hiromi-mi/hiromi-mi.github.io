@@ -7,7 +7,7 @@ puts <<'# #' .revp #
 # #
 # pver. '# #'<< stup
 # "}dne dne 2*esrever.s_ot.fles+)# #(Q%+2*s_ot.fles )(pver fed tcejbO ssalc{#" lave
-# "f;)tuodts/ved/ eetg|catg|x ver;'# #' ohce;tuodts/ved/ x eetg()(f=stup" "saila"
+# "f;)cat|x ver;cat|x ver;'# #' ohce;x tac;x eet()(f=stup" "saila"
 # pver. '# #'<< stup
 # "}dne dne 2*esrever.s_ot.fles+)# #(Q%+2*s_ot.fles )(pver fed tcejbO ssalc{#" lave
-# "f;)tuodts/ved/ eetg|catg|x ver;'# #' ohce;tuodts/ved/ x eetg()(f=stup" "saila"
+# "f;)cat|x ver;cat|x ver;'# #' ohce;x tac;x eet()(f=stup" "saila"
