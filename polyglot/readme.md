@@ -1,17 +1,17 @@
 # Polyglot について
 
-## polyglot-ruby-bash-quine.rb
+## polyglot-ruby-bash-quine.bash.rb
 
 Ruby兼BashのQuineであり、ソースコードが回文なもの
 
 bash:
 ```
-$ bash -i polyglot-ruby-bash-quine.rb
+$ bash -i polyglot-ruby-bash-quine.bash.rb
 ```
 
 ruby:
 ```
-$ ruby polyglot-ruby-bash-quine.rb
+$ ruby polyglot-ruby-bash-quine.bash.rb
 ```
 
 テスト方法:
