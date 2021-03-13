@@ -1,5 +1,10 @@
-h1, h2 {
-  border-left: 2px solid gray;
+/* Inspired by https://www.w3schools.com/w3css/w3css_trends.asp */
+h1 {
+   border-bottom: 2px solid gray;
+}
+
+h1, h2, h3 {
+  border-left: 3px solid gray;
   padding-left: 3px;
 }
 .icon {
