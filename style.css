@@ -1,0 +1,9 @@
+h1, h2 {
+  border-left: 2px solid gray;
+  padding-left: 3px;
+}
+.icon {
+  border-radius: 50%;
+  max-width: 70%;
+  height: auto;
+}
