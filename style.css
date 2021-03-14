@@ -4,11 +4,27 @@ h1 {
 }
 
 h1, h2, h3 {
-  border-left: 3px solid gray;
+  border-left: 3px dotted gray;
   padding-left: 3px;
+  padding-top: 4px;
 }
 .icon {
   border-radius: 50%;
   max-width: 70%;
   height: auto;
+  margin-left: 40px;
+}
+
+li {
+  line-height: 1.5;
+  list-style: none;
+}
+
+body {
+  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,"Yu Gothic",YuGothic,"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif
+}
+
+pre, p {
+   padding-left: 40px;
+   margin-bottom: -20px;
 }
