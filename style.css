@@ -21,7 +21,7 @@ li {
 }
 
 body {
-  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,"Yu Gothic",YuGothic,"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif
+  font-family: 'Open Sans', sans-serif;
 }
 
 pre, p {
