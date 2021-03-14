@@ -5,7 +5,7 @@ h1 {
 
 h1, h2, h3 {
   border-left: 3px dotted gray;
-  padding-left: 3px;
+  padding-left: 10px;
   padding-top: 4px;
 }
 .icon {
@@ -16,15 +16,49 @@ h1, h2, h3 {
 }
 
 li {
-  line-height: 1.5;
   list-style: none;
+  border-left-style:  dashed;
+  border-left: 1px dotted gray;
+    padding-left: 0px;
+}
+
+ul {
+  margin-bottom: 10px;
+}
+
+a {
+    text-underline-offset: 0.25em;
+}
+
+li ul li {
+  list-style:none outside;
+  line-height: 1.5;
+  border-left: none;
 }
 
 body {
   font-family: 'Open Sans', sans-serif;
+  margin: 12px;
 }
 
 pre, p {
    padding-left: 40px;
    margin-bottom: -20px;
+}
+
+/* for safari accessibility https://developer.mozilla.org/ja/docs/Web/CSS/list-style */
+ul li::before {
+  content: "\200B";
+}
+.fa {
+  display: inline-block;
+  text-decoration: none !important;
+}
+
+.account li, .link li {
+  border-left: none;
+}
+
+a:hover, a:focus {
+  text-shadow: 0 0 0.2px;
 }
