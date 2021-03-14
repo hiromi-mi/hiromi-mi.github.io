@@ -27,7 +27,8 @@ ul {
 }
 
 a {
-    text-underline-offset: 0.25em;
+    /* text-underline-offset: 0.25em; */
+    text-underline-position: under;
 }
 
 ul li ul{
