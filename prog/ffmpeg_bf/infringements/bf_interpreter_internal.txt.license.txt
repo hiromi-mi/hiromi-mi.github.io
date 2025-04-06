@@ -1,0 +1,3 @@
+Due to the restrictions of FFmpeg complex_filters, comments of bf_interpreter_internal.txt is not available.
+
+SPDX-License-Identifier: The Unlicense
