@@ -1,0 +1,75 @@
+scale=w=iw:h=3,showinfo,
+geq='
+if(gt(Y, 0), p(X, 0),
+if(gt(X, 0), ld(10+2*X),
+
+st(3, 0);
+while(bitand(not(eq(p(ld(3), 0), 10)), lt(ld(3), W)),
+  st(3, round(ld(3)+1))
+);
+st(3, round(ld(3)+1));
+print(ld(3));
+st(0, 0);
+while(bitor(not(eq(p(ld(0), 0), 10)), lt(ld(0), W)),
+  if(eq(p(ld(0), 0), 43),
+    st(11+2*ld(1), round(ld(11+2*ld(1))+1))
+  );
+  if(eq(p(ld(0), 0), 45),
+    st(11+2*ld(1), round(ld(11+2*ld(1))-1))
+  );
+  if(eq(p(ld(0), 0), 46),
+    st(10+2*ld(2), round(ld(11+2*ld(1))));
+    st(2, round(ld(2)+1))
+  );
+  if(eq(p(ld(0), 0), 62),
+    st(1, round(ld(1)+1))
+  );
+  if(eq(p(ld(0), 0), 60),
+    st(1, round(ld(1)-1))
+  );
+  if(bitand(eq(p(ld(0), 0), 91), eq(round(ld(11+2*ld(1))), 0)),
+    st(4, 1);
+    st(5,ld(0));
+    while(bitand(gt(ld(4), 0), lt(ld(5),W)),
+      st(5,round(ld(5)+1));
+      if(eq(p(ld(5), 0), 91),
+        st(4, round(ld(4)+1))
+      );
+      if(eq(p(ld(5), 0), 93),
+        st(4, round(ld(4)-1))
+      )
+    );
+    if(eq(ld(4),0),
+      st(0, ld(5))
+    )
+  );
+  if(bitand(eq(p(ld(0), 0), 93), not(eq(round(ld(11+2*ld(1))), 0))),
+    st(4, 1);
+    st(5,ld(0));
+    while(bitand(gt(ld(4), 0), gt(ld(5),0)),
+      st(5,round(ld(5)-1));
+      if(eq(p(ld(5), 0), 91),
+        st(4, round(ld(4)-1))
+      );
+      if(eq(p(ld(5), 0), 93),
+        st(4, round(ld(4)+1))
+      )
+    );
+    if(eq(ld(4),0),
+      st(0, ld(5))
+    )
+  );
+  if(eq(p(ld(0), 0), 44),
+    st(11+2*ld(1), if(lt(ld(3), W), p(ld(3), 0), 0));
+    print(ld(11+2*ld(1)));
+    print(ld(3));
+    st(3, round(ld(3)+1))
+  );
+  st(0, round(ld(0)+1))
+);
+ld(10+2*X)
+
+))'
+,showinfo
+,crop=w=iw:h=1:x=0:y=0
+,showinfo
